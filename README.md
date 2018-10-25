@@ -1,1 +1,1 @@
-# chipseq
+# Advanced ChIP-seq data analysis
