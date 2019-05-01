@@ -1,5 +1,0 @@
-ID,Tissue,Factor,Condition,Treatment,Replicate,bamReads,ControlID,bamControl,Peaks,PeakCaller
-gd7_1,embryo,H3K27ac,gd7,none,1,gd7/gd7_K27ac_rep1_chr2L.bam,gd7c1,gd7/gd7_input1_chr2L.bam,dedup_peaks/gd7_H3K27ac_rep1_peaks.narrowPeak,narrowPeak
-gd7_2,embryo,H3K27ac,gd7,none,2,gd7/gd7_K27ac_rep2_chr2L.bam,gd7c2,gd7/gd7_input1_chr2L.bam,dedup_peaks/gd7_H3K27ac_rep2_peaks.narrowPeak,narrowPeak
-tl10b_1,embryo,H3K27ac,tl10b,none,1,tl10b/tl10b_K27ac_rep1_chr2L.bam,tl10bc,tl10b/tl10b_input_chr2L.bam,dedup_peaks/tl10b_H3K27ac_rep1_peaks.narrowPeak,narrowPeak
-tl10b_2,embryo,H3K27ac,tl10b,none,2,tl10b/tl10b_K27ac_rep2_chr2L.bam,tl10bc,tl10b/tl10b_input_chr2L.bam,dedup_peaks/tl10b_H3K27ac_rep2_peaks.narrowPeak,narrowPeak
