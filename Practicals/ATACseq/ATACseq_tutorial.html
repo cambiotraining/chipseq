@@ -164,8 +164,7 @@ cd FASTQ/</code></pre>
 <h3>Quality check</h3>
 <p>Before aligning reads to the drosophila genome, we need to check if the sequenced reads meet usual QCs requirements. We have already ran the following commands on the whole genome, un-trimmed reads:</p>
 <pre class="ngs"><code>cd ~/Desktop/ATAC-seq/
-fastqc FASTQ/ATAC_R1_1.fastq.gz --outdir=QC/
-fastqc FASTQ/ATAC_R1_2.fastq.gz --outdir=QC/</code></pre>
+fastqc FASTQ/ATAC_R1_1.fastq.gz --outdir=QC/</code></pre>
 <p>You can go now in the <em>QC/</em> directory and open the <code>.html</code> files to see the results of FastQC analysis.</p>
 </div>
 <div id="read-trimming" class="section level3">
@@ -200,15 +199,15 @@ gunzip -c FASTQ/ATAC_R1_2.fastq.gz | fastx_trimmer -f 1 -l 25 -Q 33 -o FASTQ/ATA
 <p>Bowtie uses indexed genome for the alignment in order to keep its memory footprint small.</p>
 <p> <em>Bowtie</em> has a number of parameters in order to perform the alignment.</p>
 <p>To view them all type</p>
-<pre class="ngs"><code>bowtie --help</code></pre>
+<pre class="ngs"><code>bowtie2 --help</code></pre>
 <p>Bowtie uses indexed genome for the alignment in order to keep its memory footprint small. Because of time constraints we will build the index only for one chromosome of the drosophila genome (chr2L). For this we need the DNA sequence in fasta format. First, download the DNA sequence for that chromosome in the directory ‘bowtie_index’ :</p>
 <pre class="ngs"><code>cd ~/Desktop/ATAC-seq/
 mkdir bowtie_index
-wget ftp://ftp.flybase.net/genomes/Drosophila_melanogaster /dmel_r5.57_FB2014_03/fasta/dmel-2L-chromosome-r5.57.fasta.gz -P bowtie_index/</code></pre>
+wget ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/dmel_r5.57_FB2014_03/fasta/dmel-2L-chromosome-r5.57.fasta.gz -P bowtie_index/</code></pre>
 <p>You have to uncompressed the file.</p>
 <pre class="ngs"><code>gunzip bowtie_index/dmel-2L-chromosome-r5.57.fasta.gz</code></pre>
 <p>The indexed chromosome (or genome) is generated using the command:</p>
-<pre class="ngs"><code>bowtie-build bowtie_index/dmel-2L-chromosome-r5.57.fasta bowtie_index/dm3</code></pre>
+<pre class="ngs"><code>bowtie2-build bowtie_index/dmel-2L-chromosome-r5.57.fasta bowtie_index/dm3</code></pre>
 <p>This command will output 6 files with the prefix <code>dm3</code> that constitute the index.</p>
 <p>To view if the files have been successfully created type:</p>
 <pre class="ngs"><code>ls -l bowtie_index</code></pre>
@@ -221,12 +220,12 @@ The available fastq formats in bowtie are:</p>
 --integer-quals qualities are given as space-separated integers (not ASCII)</code></pre>
 <p>The fastq files format we are working on is of Sanger format (Phred+33), which is the default for <em>Bowtie</em>.</p>
 
-<p>Now that the genome is indexed we can move on to the actual alignment. The first argument make sure that Bowtie reports only uniquely mapped reads using the <code>-m 1</code> option, the second argument allows for at most two mismatches in the alignment using the <code>-v 2</code>, the third argument limit the fragment size to 1000bp by using the <code>-X 1000</code> option, the fourth argument <code>-p 2</code> the number of processors you want to use and the fifth argument -S makes sure that Bowtie output format is SAM. The following argument for bowtie is the basename of the index for the genome to be searched; in our case it is <code>dm3</code>. The last argument is the name of the fastq file. Note that we uncompress the fastq file ‘on the fly’ to avoid writting intermediate files on the disk. We pipe the Bowtie command with a samtools command to transform the output SAM into BAM files in order occupy much less space. SAM files are rather big and when dealing with a high volume of NGS data, storage space can become an issue.</p>
+<p>Now that the genome is indexed we can move on to the actual alignment. We run <em>Bowtie</em> with default parameters except the arguments <code>-X 1000</code> to limit the fragment size to 1000bp and<code>-p 2</code> the number of processors you want to use. The following argument <code>-x</code> for bowtie is the basename of the index for the genome to be searched; in our case it is <code>dm3</code>. The last argument is the name of the fastq files. Note that we uncompress the fastq file ‘on the fly’ to avoid writting intermediate files on the disk. We pipe the Bowtie command with a samtools command to transform the output SAM into BAM files in order occupy much less space. SAM files are rather big and when dealing with a high volume of NGS data, storage space can become an issue.</p>
 
 <p><em>Bowtie</em> will take approximatively 10 minutes to align the file with 2 processors. This is fast compared to other aligners that sacrifice some speed to obtain higher sensitivity.</p>
 <pre class="ngs"><code>cd ~/Desktop/ATAC-seq/
 mkdir BAM
-bowtie -m 1 -v 2 -X 1000 -p 2 -S bowtie_index/dm3 -1 &lt;( gunzip -c FASTQ/ATAC_R1_1_trimmed_chr2L.fastq.gz ) -2 &lt;( gunzip -c FASTQ/ATAC_R1_2_trimmed_chr2L.fastq.gz ) | samtools view -bS - &gt; BAM/ATAC_R1_trimmed.bam</code></pre>
+bowtie2 -X 1000 -p 2 -x bowtie_index/dm3 -1 &lt;( gunzip -c FASTQ/ATAC_R1_1_trimmed_chr2L.fastq.gz ) -2 &lt;( gunzip -c FASTQ/ATAC_R1_2_trimmed_chr2L.fastq.gz ) | samtools view -bS - &gt; BAM/ATAC_R1_trimmed.bam</code></pre>
 <p>The above commands output the alignment in BAM format and store them in the file ATAC_R1.bam. <code>-@ 4</code> allows 4 processors to the tool. Some tools could require that the BAM file is sorted and indexed. Sorting BAM files also reduces the file size and help you saving disk space.</p>
 <pre class="ngs"><code>samtools sort -@ 4 -o BAM/ATAC_R1_trimmed.sorted.bam BAM/ATAC_R1_trimmed.bam</code></pre>
 <p>Index the sorted files.</p>
@@ -236,7 +235,7 @@ bowtie -m 1 -v 2 -X 1000 -p 2 -S bowtie_index/dm3 -1 &lt;( gunzip -c FASTQ/ATAC_
 <h3>Remove duplicated and low quality reads</h3>
 <p> We will now remove low quality reads and PCR duplicates. The idea is to first mark reads identified as PCR duplicates and then remove them. You could also just have Picard remove them, if you have no need for them later in the pipeline.</p>
 <p>First, mark PCR duplicates:</p>
-<pre class="ngs"><code>java -jar /applications/local/picard-tools/picard-tools/picard.jar MarkDuplicates INPUT=BAM/ATAC_R1_trimmed.sorted.bam OUTPUT=BAM/ATAC_R1.markDup.sorted.bam METRICS_FILE=BAM/ATAC_R1.markDup.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=./</code></pre>
+<pre class="ngs"><code>java -jar $PICARD MarkDuplicates INPUT=BAM/ATAC_R1_trimmed.sorted.bam OUTPUT=BAM/ATAC_R1.markDup.sorted.bam METRICS_FILE=BAM/ATAC_R1.markDup.txt REMOVE_DUPLICATES=false ASSUME_SORTED=true VALIDATION_STRINGENCY=LENIENT TMP_DIR=./</code></pre>
 <p>The output will be a BAM file containing all of Bowtie’s output, with duplicate reads marked.</p>
 <p> Then we apply some filters to remove unwanted reads:</p>
 <pre class="ngs"><code>samtools view -b -h -f 3 -F 4 -F 8 -F 256 -F 1024 -F 2048 -q 15 BAM/ATAC_R1.markDup.sorted.bam | samtools sort -o BAM/ATAC_R1.q15.rmdup.sorted.bam -</code></pre>
@@ -336,11 +335,12 @@ peakAnno &lt;- annotatePeak(peak, tssRegion=c(-3000, 3000), TxDb=txdb)
 plotAnnoPie(peakAnno)
 
 #Associate peak to genes
-gene &lt;- seq2gene(peak, tssRegion = c(-1000, 1000), flankDistance = 3000, TxDb=txdb)
-
+genes &lt;- seq2gene(peak, tssRegion = c(-1000, 1000), flankDistance = 3000, TxDb=txdb)
+genes=strsplit(genes,split=&quot;/&quot;)
+genes=do.call(rbind, genes)
+genes=genes[,2]
 #Export genes to file
-geneSymbols &lt;- data.frame(mapIds(org.Dm.eg.db, gene, 'SYMBOL', 'ENTREZID'))
-write.table(geneSymbols[,1], file = &quot;ATAC_R1_peak_to_genes.txt&quot;, sep = &quot;&quot;,quote = FALSE, eol = &quot;\n&quot;, na = &quot;NA&quot;, row.names = FALSE, col.names = FALSE)</code></pre>
+write.table(genes, file = &quot;ATAC_R1_peak_to_genes.txt&quot;, sep = &quot;&quot;,quote = FALSE, eol = &quot;\n&quot;, na = &quot;NA&quot;, row.names = FALSE, col.names = FALSE)</code></pre>
 <p>This list of closest genes can be the basis of further analysis. For instance, you could look at the Gene Ontology terms associated with these genes to get an idea of the biological processes that may be affected. Web-based tools like DAVID (<a href="http://david.abcc.ncifcrf.gov" class="uri">http://david.abcc.ncifcrf.gov</a>) or GOstat (<a href="http://gostat.wehi.edu.au" class="uri">http://gostat.wehi.edu.au</a>) take a list of genes and return the enriched GO categories.</p>
 </div>
 <div id="identification-of-nucleosomes-positions" class="section level2">
@@ -348,7 +348,8 @@ write.table(geneSymbols[,1], file = &quot;ATAC_R1_peak_to_genes.txt&quot;, sep =
 <p>The “bead” or nucleosome is the smallest packaging unit of the chromatin fiber and it consists of 147bp DNA wrapped 1.65 turns around a histone octamer core, consisting of two H2A/H2B and H3/H4 heterodimers(Luger et al., 1997). Nucleosomes are then further assembled into various higher order structures that can potentially be unwrapped as needed (for review see (Luger and Hansen, 2005)). Nucleosome “calling” or positionning analysis is the next level of analysis and will greatly help in accurate identification of nucleosome-depleted regions.</p>
 <p> The required files are: 1. BAM files filtered for low quality and duplicated reads 2. FASTA file of the genome (here we only use chromosome 2L sequence). It needs to be indexed (using <code>samtools faidx</code>) 3. Sorted BED file with regions for which nucleosome analysis is to be performed. It is potentially advisable to extend these regions a bit (e.g. using <code>bedtools slop</code>). Regions should not overlap so it is advisable to use <code>bedtools merge</code> on these regions.</p>
 <p>Prepare the BED file</p>
-<pre class="ngs"><code>mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e &quot;select chrom,size from dm3.chromInfo&quot; &gt; dm3.genome
+<pre class="ngs"><code>#Chromosome size can be retrieved by using the following command (do not run):
+#mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e &quot;select chrom,size from dm3.chromInfo&quot; &gt; dm3.genome
 
 bedtools slop -b 500 -i peakCalling/MACS2/ATAC_R1.bed -g dm3.genome &gt; peakCalling/MACS2/ATAC_R1_sloped.bed
 
@@ -363,7 +364,7 @@ nucleoatac run --bed peakCalling/MACS2/ATAC_R1_sloped_merged_top50.bed --bam BAM
 <div id="questions-3" class="section level2">
 <h2>Questions</h2>
 <ol style="list-style-type: decimal">
-<li>Does the estimated fragment size distribution fits with the -X 1000 option we used for MACS2? </li>
+<li>Does the estimated fragment size distribution fits with the -X 1000 option we used for Bowtie? </li>
 <li>What do you observe in IGV when you compare all together MACS2 peaks, NFR peaks, nucleosome positions, H3K27ac, transcription factors? </li>
 </ol>
 <p>The regions where ATAC peaks are detected are open chromatin regions, where you always have a mixture of signals, both NFR, mono, and maybe di-or trinucleosomes. Inferring these features requires more specialized software, such as NucleoATAC. The peakcalling gives you a region where transposase cutting events are enriched and in which “you can dig deeper”.</p>
@@ -416,9 +417,10 @@ Prepare the output directories:</p>
 mkdir ~/Desktop/ATAC-seq/peakCalling/FSEQ
 mkdir ~/Desktop/ATAC-seq/peakCalling/FSEQ/ATAC_R1</code></pre>
 <p> <em>FSEQ</em> takes a BED file as input. So you need to transform the BAM files into BED file.</p>
-<pre class="ngs"><code>bamToBed -i BAM/ATAC_R1.q15.rmdup.sorted.bam &gt; peakCalling/FSEQ/ATAC_R1.bam.bed</code></pre>
+<pre class="ngs"><code>bedtools bamtobed -i BAM/ATAC_R1.q15.rmdup.sorted.bam &gt; peakCalling/FSEQ/ATAC_R1.bam.bed</code></pre>
 <p> Then run <em>FSEQ</em>.</p>
 <pre class="ngs"><code>fseq -h
+mkdir peakCalling/FSEQ/ATAC_R1
 fseq -o peakCalling/FSEQ/ATAC_R1 -of bed -t 6 peakCalling/FSEQ/ATAC_R1.bam.bed</code></pre>
 <p> <em>FSEQ</em> produces one peak file for each chromosome. Here we don’t need to concatenate files because we are working with only one chromosome. but we advise you to concatenate them all when you will analyze complete datasets.</p>
 <pre class="ngs"><code>cat peakCalling/FSEQ/ATAC_R1/*bed &gt; peakCalling/FSEQ/ATAC_R1_fseq.bed </code></pre>
