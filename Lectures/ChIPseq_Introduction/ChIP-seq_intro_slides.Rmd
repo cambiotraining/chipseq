@@ -29,19 +29,19 @@ knitr::opts_chunk$set(echo = FALSE)
     
     * Mikkelsen et al (Nature) - histone modification  
 
-* >4000 publications currently in PubMed
+* \>4000 publications currently in PubMed
 
-## APPLICATIONS
+## Applications
 
 * Protein-DNA interaction
 
     * <span class="pt">Identification of transcription factor binding</span>
     
-<img src="images/nrg2641-f1_protein.jpg"  class="centerimg" style="width: 40%" />
+<img src="images/nrg2641-f1_protein.jpg"  class="centerimg" style="width: 50%" />
 
 * <span class="pt">Histone modifications</span>
 
-<img src="images/nrg2641-f1_histone.jpg"  class="centerimg" style="width: 40%" />
+<img src="images/nrg2641-f1_histone.jpg"  class="centerimg" style="width: 50%" />
 
 
 ## Experiment Overview
@@ -110,7 +110,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Experimental Design
 
-<ul style="font-size: 30px">
+<ul style="font-size: 30px; line-height: 1.6">
   <li class="pkht">Antibody quality</li>
   <li>Control experiment</li>
   <li>Depth of sequencing</li>
@@ -119,10 +119,10 @@ knitr::opts_chunk$set(echo = FALSE)
 </ul>
 
 
-## ANTIBODY QUALITY
+## Antibody Quality
 
-* Antibody quality - a <span class="pkth">sensitive</span>
-and <span class="pkth">specific</span>antibody will give a high level of enrichment
+* Antibody quality - a <span class="pkht">sensitive</span>
+and <span class="pkht">specific</span> antibody will give a high level of enrichment
 
     * <span class="pt">Limited efficiency of antibody is the main reason for failed ChIP-seq experiments</span>
     
@@ -136,7 +136,7 @@ and <span class="pkth">specific</span>antibody will give a high level of enrichm
 
 ## Experimental Design
 
-<ul style="font-size: 30px">
+<ul style="font-size: 30px; line-height: 1.6">
   <li>Antibody quality</li>
   <li class="pkht">Control experiment</li>
   <li>Depth of sequencing</li>
@@ -175,7 +175,7 @@ and <span class="pkth">specific</span>antibody will give a high level of enrichm
 https://www.nature.com/articles/nbt.1518/figures/1?proof=trueIn&draft=journal
 -->
 
-## CONTROL TYPE
+## Control Type
 
 * Input DNA
 
@@ -193,7 +193,7 @@ https://www.nature.com/articles/nbt.1518/figures/1?proof=trueIn&draft=journal
 
 ## Experimental Design
 
-<ul style="font-size: 30px">
+<ul style="font-size: 30px; line-height: 1.6">
   <li>Antibody quality</li>
   <li>Control experiment</li>
   <li class="pkht">Depth of sequencing</li>
@@ -203,7 +203,7 @@ https://www.nature.com/articles/nbt.1518/figures/1?proof=trueIn&draft=journal
 
 ## Sequencing Depth
 
-<img src="images/nbt.1518-F5.jpg"  class="centerimg" style="width: 70%; margin-top: -40px" />
+<img src="images/nbt.1518-F5.jpg"  class="centerimg" style="width: 70%; margin-top: 0px" />
 
 * More prominent peaks are identified with fewer reads, versus weaker peaks that require greater
 depth
@@ -217,11 +217,11 @@ depth
 
 ## Sequencing Depth
 
-<img src="images/nbt.1518-F5.jpg"  class="centerimg" style="width: 70%; margin-top: -40px" />
+<img src="images/nbt.1518-F5.jpg"  class="centerimg" style="width: 70%; margin-top: 0px" />
 
 * With current sequencing technologies for human/mouse >20M uniquely mapped reads is usually sufficient
 
-* HiSeq 4000 - ~300-350 Million reads per lane
+* Illumina HiSeq 4000: ~300-350 Million reads per lane
 
 <div style="text-align: right">
 <p style="font-size: 14px">Image adapted from: Rozowsky et al. (2009) Nature Biotechnology, 27:66-75.</p>
@@ -229,7 +229,7 @@ depth
 
 ## Experimental Design
 
-<ul style="font-size: 30px">
+<ul style="font-size: 30px; line-height: 1.6">
   <li>Antibody quality</li>
   <li>Control experiment</li>
   <li>Depth of sequencing</li>
@@ -270,7 +270,7 @@ depth
 
 ## Experimental Design
 
-<ul style="font-size: 30px">
+<ul style="font-size: 30px; line-height: 1.6">
   <li>Antibody quality</li>
   <li>Control experiment</li>
   <li>Depth of sequencing</li>
