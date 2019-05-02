@@ -287,8 +287,8 @@ and returns their summits
 Now run macs using the following command:
 
 ```ngs
-macs2 callpeak -t Oct4.bam  -c Input.bam --format BAM --name Oct4 --gsize 138000000 
---pvalue 1e-3 --call-summits
+macs2 callpeak -t Oct4.bam  -c Input.bam --format BAM --name Oct4 --gsize 138000000 \
+    --pvalue 1e-3 --call-summits
 ```
 
 Open the Excel peak file and view the peak details. Note that the number of tags (column 6 `pileup`) refers to the number of reads at the summit (i.e. summit height).
@@ -327,7 +327,7 @@ In order to biologically interpret the results of ChIP-seq experiments, it is us
 To convert `Oct4_peaks.narrowPeak` to a BED file,  type:
 
 ```ngs
-cut -f1-4 Oct4_peaks.narrowPeak > Oct4_peaks.bed
+cut -f 1-4 Oct4_peaks.narrowPeak > Oct4_peaks.bed
 ```
 
 Consult cut help file to see the options and parameters.
@@ -537,12 +537,12 @@ figure and table given below?
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\textwidth]{/Users/sandra.cortijo/Desktop/myrto-owned-practicals-master/plots/histone_mods.jpg}
-\includegraphics[width=0.8\textwidth]{/Users/sandra.cortijo/Desktop/myrto-owned-practicals-master/plots/histone-mods-table.pdf}
+\includegraphics[width=0.5\textwidth]{../../Lectures/ChIPseq_Introduction/images/histone_mods.jpg}
+\includegraphics[width=0.8\textwidth]{../../Lectures/ChIPseq_Introduction/images/histone-mods-table.pdf}
 \end{figure}
 
-![histone_mods](histone_mods.jpg "histone_mods")
-![histone-mods-table](histone-mods-table.jpg "histone-mods-table")
+![histone_mods](../../Lectures/ChIPseq_Introduction/images/histone_mods.jpg "histone_mods")
+![histone-mods-table](../../Lectures/ChIPseq_Introduction/images/histone-mods-table.jpg "histone-mods-table")
 
 CONGRATULATIONS! You’ve made it to the end of the practical. 
 
@@ -587,7 +587,7 @@ plotFingerprint -b Oct4.sorted.bam Input.sorted.bam -plot Oct4_fingerprint.png
 \hrulefill\par
 \hrulefill\par
 
-![fingerprint_examples](fingerprint_examples.png)
+![fingerprint_examples](../../Lectures/ChIPseq_Introduction/images/fingerprint_examples.png)
 
 
 # Bonus Exercise II: How to remove duplicates by Using Picard

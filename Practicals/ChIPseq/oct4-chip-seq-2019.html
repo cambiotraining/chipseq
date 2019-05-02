@@ -159,7 +159,7 @@ $(document).ready(function () {
 <p> We will use one data set in this practical, which can be found in the ChIP-seq directory on your desktop. Throughout this practical we will try to identify potential transcription factor binding sites of Oct4 in mouse embryonic stem cells.</p>
 <p>Open the Terminal.</p>
 <p> First, go to the right folder, where the data are stored.</p>
-<pre class="bash"><code>cd ~/Desktop/ChIP-seq</code></pre>
+<pre class="bash"><code>cd ~/Course_Materials/Practicals/ChIPseq</code></pre>
 <p> The .fastq file that we will align is called Oct4.fastq. This file is based on Oct4 ChIP-seq data published by Buecker et al. (2014). We will align these reads to the mouse chromosome 1.</p>
 </div>
 <div id="alignment" class="section level1">
@@ -177,8 +177,8 @@ bowtie-build bowtie_index/mm10.fa bowtie_index/mm10</code></pre>
 <pre class="ngs"><code>ls -l bowtie_index</code></pre>
 <p> Now that the genome is indexed we can move on to the actual alignment. The first two arguments make sure that the output is in SAM format using the <code>-S</code> parameter and that Bowtie reports only uniquely mapped reads using the <code>-m 1</code> option. The following argument for bowtie is the basename of the index for the genome to be searched; in our case is <code>mm10</code>. The last argument is the name of the fastq file.</p>
 <p> Align the Oct4 reads using <em>Bowtie</em>:</p>
-<pre class="ngs"><code>gunzip Oct4.fastq.gz
-bowtie -m 1 -S bowtie_index/mm10 Oct4.fastq &gt; Oct4.sam</code></pre>
+<pre class="ngs"><code>gunzip FASTQ/Oct4.fastq.gz
+bowtie -m 1 -S bowtie_index/mm10 FASTQ/Oct4.fastq &gt; Oct4.sam</code></pre>
 <p>The above command outputs the alignment in SAM format and stores them in the file <code>Oct4.sam</code>.</p>
 <p> In general before you run <em>Bowtie</em>, you have to know which fastq format you have. The available fastq formats in bowtie are:</p>
 <pre class="ngs"><code>--phred33-quals input quals are Phred+33 (default, same as --solexa-quals)
@@ -273,9 +273,9 @@ for human, 'mm' for mouse 'ce' for C. elegans and 'dm' for fruitfly.
 and returns their summits
 --pvalue the P-value cutoff for peak detection.</code></pre>
 <p> Now run macs using the following command:</p>
-<pre class="ngs"><code>macs2 callpeak -t Oct4.bam  -c Input.bam --format BAM --name Oct4 --gsize 138000000 
---pvalue 1e-3 --call-summits</code></pre>
-<p>Open the Excel peak file and view the peak details. Note that the number of tags (column 6) refers to the number of reads at the summit (i.e. summit height).</p>
+<pre class="ngs"><code>macs2 callpeak -t Oct4.bam  -c Input.bam --format BAM --name Oct4 --gsize 138000000 \
+    --pvalue 1e-3 --call-summits</code></pre>
+<p>Open the Excel peak file and view the peak details. Note that the number of tags (column 6 <code>pileup</code>) refers to the number of reads at the summit (i.e. summit height).</p>
 <p> MACS generates its peak files in a file format called .narrowPeak file. This is a simple text format containing genomic locations, specified by chromosome, begin and end positions, and information on the statistical significance of each called peak.</p>
 <p>See <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format12" class="uri">http://genome.ucsc.edu/FAQ/FAQformat.html#format12</a> for details.</p>
 <p>NarrowPeak files can also be uploaded to IGV or other genome browsers.</p>
@@ -284,7 +284,7 @@ and returns their summits
 <div id="questions-2" class="section level2">
 <h2>Questions</h2>
 <ol style="list-style-type: decimal">
-<li><p>Does the first peak that was called convincing to you? </p></li>
+<li><p>Is the first peak that was called convincing to you? </p></li>
 <li><p>Compare the Oct4 peak profile with that of H3K4me3 histone modification. To do so, upload the <code>H3K4me3.bw</code> file, which is located within the ChIP-seq folder. </p></li>
 <li><p>In IGV jump to location 1:35,987,885-36,101,395 for a sample peak. Do you think H3K4me3 peaks regions contain one or more modification sites? What about the Oct4 peak located within the Lemd1 gene? </p></li>
 </ol>
@@ -295,16 +295,18 @@ and returns their summits
 <p> In order to biologically interpret the results of ChIP-seq experiments, it is usually recommended to look at the genes and other annotated elements that are located in proximity to the identified enriched regions. We will use R package ChIPseeker (<a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html" class="uri">https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html</a>). We need to modify the peak files into BED format, which is a tab-delimited file that contains information on chromosome, start and end position for each region. See <a href="http://genome.ucsc.edu/FAQ/FAQformat.html#format1" class="uri">http://genome.ucsc.edu/FAQ/FAQformat.html#format1</a> for details.</p>
 
 <p>To convert <code>Oct4_peaks.narrowPeak</code> to a BED file, type:</p>
-<pre class="ngs"><code>cut -f1-4 Oct4_peaks.narrowPeak &gt; Oct4_peaks.bed</code></pre>
+<pre class="ngs"><code>cut -f 1-4 Oct4_peaks.narrowPeak &gt; Oct4_peaks.bed</code></pre>
 <p>Consult cut help file to see the options and parameters.</p>
 <pre class="ngs"><code>cut --help</code></pre>
 <p>Then start R in Terminal</p>
 <pre class="ngs"><code>R</code></pre>
 <pre class="ngs"><code>#Load requied R libraries
+library(dplyr)
 library(ChIPseeker)
-library(TxDb.Dmelanogaster.UCSC.mm10.ensGene)
-txdb &lt;- TxDb.Dmelanogaster.UCSC.mm10.ensGene
+library(TxDb.Mmusculus.UCSC.mm10.ensGene)
+txdb &lt;- TxDb.Mmusculus.UCSC.mm10.ensGene
 library(clusterProfiler)
+library(org.Mm.eg.db)
 
 #Read bed file
 peak &lt;- readPeakFile(&quot;Oct4_peaks.bed&quot;)
@@ -316,12 +318,25 @@ peakAnno &lt;- annotatePeak(peak, tssRegion=c(-3000, 3000), TxDb=txdb)
 #Peak localisation
 plotAnnoPie(peakAnno)
 
-#Associate peak to genes
-gene &lt;- seq2gene(peak, tssRegion = c(-1000, 1000), flankDistance = 3000, TxDb=txdb)
+#Annotate peaks
+peakAnno &lt;- annotatePeak(peak, tssRegion = c(-1000, 1000), flankDistance = 3000, TxDb=txdb)
+peakTab &lt;- as.data.frame(peakAnno)
 
-#Export genes to file
-geneSymbols &lt;- data.frame(mapIds(org.Mm.eg.db, gene, 'SYMBOL', 'ENTREZID'))
-write.table(geneSymbols[,1], file = &quot;Oct4_peaks_to_genes.txt&quot;, sep = &quot;&quot;,quote = FALSE, eol = &quot;\n&quot;, na = &quot;NA&quot;, row.names = FALSE, col.names = FALSE)</code></pre>
+#Add Gene Symbols
+geneSymbols &lt;- data.frame(select(org.Mm.eg.db, peakTab$geneId, c('ENSEMBL', 'SYMBOL'), 'ENSEMBL'))
+ # This returns multiple results per an ENSEMBL ID. Let's just keep the first results for each.
+geneSymbols &lt;- geneSymbols[!duplicated(geneSymbols$SYMBOL),]
+
+#Add to the peak table
+peakTab &lt;- left_join(peakTab, geneSymbols, by=c(geneId=&quot;ENSEMBL&quot;))
+
+#Export the table
+write.table(peaktab, &quot;Oct4_annotated_peaks.txt&quot;, row.names=FALSE, sep=&quot;\t&quot;, na=&quot;NA&quot;)
+
+#Export a list of the closest genes
+
+genes &lt;- na.omit(unique(peakTab$SYMBOL))
+write(genes, file = &quot;Oct4_peaks_to_genes.txt&quot;)</code></pre>
 <p>Finally, quit R</p>
 <pre class="ngs"><code>quit()</code></pre>
 <p>This list of closest downstream genes found under the link <strong>The Full Annotation File</strong> can be the basis of further analysis. For instance, you could look at the Gene Ontology terms associated with these genes to get an idea of the biological processes that may be affected. Web-based tools like DAVID (<a href="http://david.abcc.ncifcrf.gov" class="uri">http://david.abcc.ncifcrf.gov</a>) or GOstat (<a href="http://gostat.wehi.edu.au" class="uri">http://gostat.wehi.edu.au</a>) take a list of genes and return the enriched GO categories.</p>
@@ -336,21 +351,21 @@ write.table(geneSymbols[,1], file = &quot;Oct4_peaks_to_genes.txt&quot;, sep = &
 <p>Using the sorted file, select the top 300 peaks.</p>
 <pre class="ngs"><code>head -n 300 Oct4_summits.sorted.bed &gt; Oct4_top300_summits.sorted.bed</code></pre>
 <p>To create a BED file for the regions of 61 base pairs centred around the peak summit, first download a file containing information about the chromosomes size for the mouse genome. This file is required by ‘bedtools slop’ to add 30bp around the summit peak.</p>
-<pre class="ngs"><code>mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e &quot;select chrom, 
-size from mm10.chromInfo&quot;  &gt; mm10.genome
+<pre class="ngs"><code>mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A \
+    -e &quot;select chrom, size from mm10.chromInfo&quot;  &gt; mm10.genome
 
 bedtools slop -b 30 -i Oct4_top300_summits.sorted.bed -g mm10.genome &gt; Oct4_top300_summits.bed</code></pre>
 <p>Consult bedtools slop help file to see the options and parameters.</p>
 <pre class="ngs"><code>bedtools slop --help</code></pre>
 <p>The mouse genome sequence is available in FASTA format in the <code>bowtie_index</code> directory. You can now use <code>bedtools</code> to extract the sequences around the Oct4 peak summits in FASTA format, which we save in a file named <code>Oct4_top300_summits.fa</code>.</p>
-<pre class="ngs"><code>bedtools getfasta -fi bowtie_index/mm10.fa -bed Oct4_top300_summits.bed 
--fo Oct4_top300_summits.fa</code></pre>
+<pre class="ngs"><code>bedtools getfasta -fi bowtie_index/mm10.fa -bed Oct4_top300_summits.bed \
+    -fo Oct4_top300_summits.fa</code></pre>
 <p> We are now ready to perform de novo motif discovery, for which we will use the tool MEME.</p>
-<p> Open a web bowser, go to the MEME website at <a href="%5Bhttp://meme-suite.org/%5D">http://meme-suite.org/</a>, and choose the ‘MEME’ tool. Fill in the necessary details, such as:</p>
+<p> Open a web bowser, go to the MEME website at <a href="http://meme-suite.org/" class="uri">http://meme-suite.org/</a>, and choose the ‘MEME’ tool. Fill in the necessary details, such as:</p>
 <ul>
 <li>the sub-peaks fasta file <code>Oct4_top300_summits.fa</code> (will need uploading), or just paste in the sequences.</li>
 <li>the number of motifs we expect to find (1 per sequence)</li>
-<li>the width of the desired motif (between 6 to 20)</li>
+<li>the width of the desired motif (between 6 to 20) (under <code>Advanced options</code>)</li>
 <li>the maximum number of motifs to find (3 by default). For Oct4 one classical motif is known.</li>
 </ul>
 <p> Start Search. The results page will refresh automatically and once the tool has finished running, please follow the link <strong>“MEME html output”</strong></p>
@@ -382,8 +397,8 @@ bamCompare -b1 H3K4me3.bam -b2 Input.bam -o Log2Ratio_H3K4me3_INPUT.bw</code></p
 <p>Then create a matrix, which is required for plotting the ChIP profiles, with computeMatrix, using the mode to center profiles around TSS or TTS:</p>
 <pre class="ngs"><code>computeMatrix --help
 
-computeMatrix reference-point -S Log2Ratio_H3K4me3_INPUT.bw -R ../TSS_mm10.bed 
--a 500 -b 500 -out Matrix_log2_H3K4me3_allTSS.mat.gz</code></pre>
+computeMatrix reference-point -S Log2Ratio_H3K4me3_INPUT.bw -R ../TSS_mm10.bed \
+    -a 500 -b 500 -out Matrix_log2_H3K4me3_allTSS.mat.gz</code></pre>
 <p>To plot profiles of ChIP-seq, use plotProfile:</p>
 <pre class="ngs"><code>plotProfile --help
 plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz -out Profile_log2_H3K4me3_allTSS.png</code></pre>
@@ -413,7 +428,7 @@ plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz -out Profile_log2_H3K4me3_allTS
 
 <p>Before to explore any results form ChIP-seq data, it is important to verify if the ChIP worked. In other words, did the antibody-treatment enrich sufficiently so that the ChIP signal can be separated from the background signal? To test this, we are using the ‘plotFingerprint’ function from deepTools (<a href="http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html" class="uri">http://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html</a>). This tool plots a profile of cumulative read coverages for the INPUT and ChIP. It is used to determine how well the signal in the ChIP-seq sample can be differentiated from the background distribution of reads in the control sample. Also different type of profiles are expected for ChIPs resulting in narrow or broad regions.</p>
 <p>First, you should go back to the correct directory:</p>
-<pre class="ngs"><code>cd ~/Desktop/ChIP-seq</code></pre>
+<pre class="ngs"><code>cd ~/Course_Materials/Practicals/ChIPseq</code></pre>
 
 <p>To test if the Oct4 ChIP worked, type:</p>
 <pre class="ngs"><code>plotFingerprint -b Oct4.sorted.bam Input.sorted.bam -plot Oct4_fingerprint.png</code></pre>
@@ -438,9 +453,9 @@ plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz -out Profile_log2_H3K4me3_allTS
 <p>One of the Picard tools (MarkDuplicates) can be used to analyse and remove duplicates from the raw sequence data. The input for Picard is a sorted alignment file in <code>.bam</code> format. Short read aligners such as, bowtie, BWA, tophat etc. can be used to align fastq files against a reference genome to generate SAM/BAM alignment format. However interested users can use the following general command to run the MarkDuplicates tool at their leisure and only need to provide a BAM file for the INPUT argument.</p>
 
 <p>To remove duplicates reads for the Input, Type:</p>
-<pre class="ngs"><code>java -jar /applications/local/picard-tools/picard-tools/picard.jar MarkDuplicates 
-INPUT=Input.sorted.bam  VALIDATION_STRINGENCY=LENIENT OUTPUT=Input.sorted.picard.dup  
-METRICS_FILE=Input.sorted.picard.matric  ASSUME_SORTED=true REMOVE_DUPLICATES=true</code></pre>
+<pre class="ngs"><code>java -jar /applications/local/picard-tools/picard-tools/picard.jar MarkDuplicates \
+  INPUT=Input.sorted.bam  VALIDATION_STRINGENCY=LENIENT OUTPUT=Input.sorted.picard.dup  \
+  METRICS_FILE=Input.sorted.picard.metric  ASSUME_SORTED=true REMOVE_DUPLICATES=true</code></pre>
 <p>Changing the code, remove duplicates reads for the Oct4 ChIP.</p>
 
 <div id="questions-6" class="section level2">
