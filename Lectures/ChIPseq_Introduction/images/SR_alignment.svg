@@ -14,9 +14,9 @@
    viewBox="0 0 436.72888 117.22001"
    version="1.1"
    id="svg5692"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   inkscape:version="0.91 r13725"
    sodipodi:docname="SR_alignment.svg"
-   inkscape:export-filename="/home/sawle01/Documents/training/ChIPseq_course/chipseq/images/SR_alignment.png"
+   inkscape:export-filename="/Users/sawle01/Documents/training/chipseq/Lectures/ChIPseq_Introduction/images/SR_alignment.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96">
   <defs
@@ -28,8 +28,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5443956"
-     inkscape:cx="1198.4725"
+     inkscape:zoom="0.5"
+     inkscape:cx="895.28517"
      inkscape:cy="110.54163"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -38,10 +38,10 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1918"
-     inkscape:window-height="1023"
+     inkscape:window-width="1280"
+     inkscape:window-height="687"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="1"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5689">
@@ -51,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -219,7 +219,7 @@
            height="826.30481"
            x="-1161.6754"
            y="-198.75984" /></flowRegion><flowPara
-         id="flowPara6397"></flowPara></flowRoot>    <text
+         id="flowPara6397" /></flowRoot>    <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:Courier;-inkscape-font-specification:Courier;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
        x="-401.97336"
@@ -230,32 +230,36 @@
          x="-401.97336"
          y="-3.2047892"
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458332">Reference Sequence</tspan></text>
-    <text
-       id="text6405"
-       y="59.891296"
-       x="-401.97336"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:Courier;-inkscape-font-specification:Courier;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
-       xml:space="preserve"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458332"
-         y="59.891296"
-         x="-401.97336"
-         id="tspan6403"
-         sodipodi:role="line">Short Reads</tspan></text>
     <g
-       id="g6413"
-       transform="matrix(0.58778279,0,0,0.9393975,-130.31202,1.1154009)">
-      <path
-         sodipodi:nodetypes="ccc"
-         inkscape:connector-curvature="0"
-         id="path6407"
-         d="m -286.74766,7.3362578 c -34.83093,0.4860131 -7.93822,51.0313642 -38.88105,51.0313642 v 0"
-         style="fill:none;stroke:#000000;stroke-width:2.2650001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-      <path
-         style="fill:none;stroke:#000000;stroke-width:2.2650001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         d="m -286.74766,109.39899 c -34.83093,-0.48602 -7.93822,-51.031368 -38.88105,-51.031368 v 0"
-         id="path6409"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccc" />
+       id="g4187"
+       transform="translate(18.800083,0)">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:Courier;-inkscape-font-specification:Courier;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         x="-401.97336"
+         y="59.891296"
+         id="text6405"><tspan
+           sodipodi:role="line"
+           id="tspan6403"
+           x="-401.97336"
+           y="59.891296"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.26458332">Short Reads</tspan></text>
+      <g
+         transform="matrix(0.58778279,0,0,0.9393975,-130.31202,1.1154009)"
+         id="g6413">
+        <path
+           style="fill:none;stroke:#000000;stroke-width:2.2650001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           d="m -286.74766,7.3362578 c -34.83093,0.4860131 -7.93822,51.0313642 -38.88105,51.0313642 l 0,0"
+           id="path6407"
+           inkscape:connector-curvature="0"
+           sodipodi:nodetypes="ccc" />
+        <path
+           sodipodi:nodetypes="ccc"
+           inkscape:connector-curvature="0"
+           id="path6409"
+           d="m -286.74766,109.39899 c -34.83093,-0.48602 -7.93822,-51.031368 -38.88105,-51.031368 l 0,0"
+           style="fill:none;stroke:#000000;stroke-width:2.2650001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      </g>
     </g>
   </g>
 </svg>

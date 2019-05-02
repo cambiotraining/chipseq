@@ -43,13 +43,34 @@ knitr::opts_chunk$set(echo = FALSE)
 
 <img src="images/nrg2641-f1_histone.jpg"  class="centerimg" style="width: 50%" />
 
+<div style="text-align: right">
+<p style="font-size: 14px">Image adapted from: Park P (2009), Nature Reviews Genetics, 10, 669-680.</p>
+</div>
 
 ## Experiment Overview
 
 <div style="width: 60%; 
             float: left"> 
-<span style="color: #FFFFFF;">.</span>
             
+<div style="margin-top: 40px">
+* Crosslinking
+</div>
+<div style="margin-top: 55px">
+* Fragmentation and Immunoprecipitation
+</div>
+<div style="margin-top: 50px">
+* DNA purification
+</div>
+<div style="margin-top: 50px">
+* Library Preparation
+</div>
+<div style="margin-top: 60px">
+* Sequencing
+</div>
+<div style="margin-top: 60px">
+* Analysis
+</div>
+
 </div>
 
 <div style="margin-left: 60px;
@@ -344,7 +365,7 @@ to the most likely origin of the fragment from which the read came.
     
     * Real biological signal
     
-    * We cannot tell apart which one, unless we use barcodes.
+    * We cannot tell apart which one, unless we use barcodes (UMIs).
     
 ## Quality Control - alignment
 
@@ -360,36 +381,33 @@ read_tsv("dummy_alignment_data.tsv.csv") %>%
 
 ## Quality Control - Enrichment
 
-<!--
-<div style="width: 20%; 
+<div style="width: 60%; 
             float: left"> 
             
-<div style="margin-top: 50px">
-Lack of coverage in the IP
-</div>
-<div style="margin-top: 240px">
-IP successful
-</div>
--->
+<img src="images/CHANCE_cumulative_enrichment.jpg"  class="centerimg" style="width: 90%; margin-top: -30px" />
 
 </div>
 
-<div style="width: 60%"> 
-<img src="images/CHANCE_cumulative_enrichment.jpg"  class="centerimg" style="width: 100%; margin-top: -50px" />
+<div style="margin-left: 60px;
+            float: none;">
 
+<div style="padding-top: 25px">
+**a)** Lack of coverage in the IP
+
+**b)** Amplification Bias
+
+**c)** IP successful
+
+**d)** Weak IP
 </div>
 
-<!--
-#<div style="width=20%;">            
 <div style="margin-top: 150px">
-Amplification Bias
+<p style="font-size: 14px">Diaz et al. (2012) Genome Biology, 13:R98.</p>
+<p style="font-size: 14px">https://github.com/songlab/chance</p>
+<p style="font-size: 14px">https://deeptools.readthedocs.io</p>
 </div>
-<div style="margin-top: 240px">
-Weak IP
 </div>
 
-</div>
--->
 
 ## Analysis Workflow Overview
 
@@ -433,9 +451,9 @@ Weak IP
 
 ## Peak Calling - Challenges
 
-* Adjust for sequence alignability - regions that contain repetitive elements have different expected tag count
+* Adjust for sequence <span class="pkht">mappability</span>- regions that contain repetitive elements have different expected tag count
 
-* Different ChIP-seq applications produce different type of peaks. Most current tools have been designed to detect sharp peaks (TF binding, histone modifications at regulatory elements)
+* Different ChIP-seq applications produce different <span class="pkht">type of peaks</span>. Most current tools have been designed to detect sharp peaks (TF binding, histone modifications at regulatory elements)
 
 * Alternative tools exist for broader peaks (histone modifications that mark domains - transcribed or repressed), e.g. SICER
 
@@ -445,6 +463,33 @@ Weak IP
 
 <div style="text-align: right">
 <p style="font-size: 14px">Image adapted from: Park P (2009), Nature Reviews Genetics, 10, 669-680.</p>
+</div>
+
+## Peak Calling - MACS2
+
+<div style="width: 50%; 
+            float: left"> 
+            
+* Identify candidate peaks using a Poisson distribution to model background            
+            
+* Remove duplicate tags (in excess of what can be expected by chance)
+
+* Slide window across the genome to find candidate peaks with a significant tag enrichment (Poisson distribution, global background, p-value 10e-5)
+
+* Assess strand shift and adjust tags accordingly
+
+* Candidate peaks are evaluated by  comparing them against a “local” distribution.
+
+* Uses the control sample to eliminate peaks that are also present there
+
+</div>
+
+<div style="margin-left: 60px;
+            float: none;">
+<img src="images/MACS2_algorithm.png", style="width: 40%;
+                                               margin-left: auto;
+                                               margin-right: auto;
+                                               display: block;">
 </div>
 
 ## Peak Calling - MACS2
@@ -477,10 +522,16 @@ Model the shift size between +/- strand tags:
             
 * Identify candidate peaks using a Poisson distribution to model background            
             
+* Remove duplicate tags (in excess of what can be expected by chance)
+
+* Slide window across the genome to find candidate peaks with a significant tag enrichment (Poisson distribution, global background, p-value 10e-5)
+
+* Assess strand shift and adjust tags accordingly
+
 * Candidate peaks are evaluated by  comparing them against a “local” distribution.
 
-* False Discovery Rate (FDR) is calculated (#peaks in control) / (#peaks in IP) 
-  
+* Uses the control sample to eliminate peaks that are also present there
+
 </div>
 
 <div style="margin-left: 60px;
@@ -490,16 +541,6 @@ Model the shift size between +/- strand tags:
                                                margin-right: auto;
                                                display: block;">
 </div>
-
-## MACS Peak Detection
-
-* Remove duplicate tags (in excess of what can be expected by chance)
-
-* Slide window across the genome to find candidate peaks with a significant tag enrichment (Poisson distribution, global background, p-value 10e-5)
-
-* Also looks at local background levels and eliminates peaks that are not significant with respect to local background
-
-* Uses the control sample to eliminate peaks that are also present there
 
 ## Analysis Workflow Overview
 
@@ -540,3 +581,8 @@ Model the shift size between +/- strand tags:
 * Gene Ontology analysis on genes that bind the same factor or have the same modification
 
 * Correlation with SNP data to find allele-specific binding
+
+## 
+
+### THANK YOU
+
