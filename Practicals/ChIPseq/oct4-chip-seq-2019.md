@@ -4,34 +4,31 @@
 
 ## Resources used
 
-Bowtie: [http://bowtie-bio.sourceforge.net/index.shtml](http://bowtie-bio.sourceforge.net/index.shtml)
+[Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
 
-Samtools: [http://samtools.sourceforge.net/](http://samtools.sourceforge.net/)
+[Samtools](http://samtools.sourceforge.net/)
 
-Bedtools: [http://bedtools.readthedocs.io/en/latest/](http://bedtools.readthedocs.io/en/latest/)
+[Bedtools](http://bedtools.readthedocs.io/en/latest/)
 
-UCSC tools: [http://hgdownload.cse.ucsc.edu/admin/exe/](http://hgdownload.cse.ucsc.edu/admin/exe/)
+[IGV genome browser](http://www.broadinstitute.org/igv/)
 
-IGV genome browser: [http://www.broadinstitute.org/igv/](http://www.broadinstitute.org/igv/)
+[MACS2](https://github.com/taoliu/MACS)
 
-MACS2: [https://github.com/taoliu/MACS](https://github.com/taoliu/MACS)
+[ChIPseeker](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html)
 
-ChIPseeker: [https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html](https://www.bioconductor.org/packages/devel/bioc/vignettes/ChIPseeker/inst/doc/ChIPseeker.html)
+[MEME](http://meme.sdsc.edu/meme/cgi-bin/meme.cgi)
 
-MEME: [http://meme.sdsc.edu/meme/cgi-bin/meme.cgi](http://meme.sdsc.edu/meme/cgi-bin/meme.cgi)
+[TOMTOM](http://meme.sdsc.edu/meme/cgi-bin/tomtom.cgi)
 
-TOMTOM: [http://meme.sdsc.edu/meme/cgi-bin/tomtom.cgi](http://meme.sdsc.edu/meme/cgi-bin/tomtom.cgi)
-
-DeepTools: [http://deeptools.readthedocs.io/en/latest/index.html](http://deeptools.readthedocs.io/en/latest/index.html)
+[DeepTools](http://deeptools.readthedocs.io/en/latest/index.html)
 
 ## Additional resources:
 
-Ensembl: [http://www.ensembl.org](http://www.ensembl.org)
+[Ensembl](http://www.ensembl.org)
 
-Original Data from: 
-[http://www.ebi.ac.uk/ena/data/view/PRJNA242533](http://www.ebi.ac.uk/ena/data/view/PRJNA242533)
+[Original Data](http://www.ebi.ac.uk/ena/data/view/PRJNA242533)
 
-These data are reported in  Buecker, C. et al. Reorganization of Enhancer
+These data are reported in Buecker, C. et al. Reorganization of Enhancer
 Patterns in Transition from Naive to Primed Pluripotency. Cell Stem Cell 14,
 838–853 (2014).
 
@@ -40,7 +37,7 @@ Patterns in Transition from Naive to Primed Pluripotency. Cell Stem Cell 14,
 The goal of this hands-on session is to perform some basic tasks in the
 analysis of ChIP-seq data. The first step includes an short read alignment for
 a small subset of raw reads. We will align raw sequencing data to the mouse
-genome using Bowtie and then we will manipulate the SAM output in order to
+genome using Bowtie2 and then we will manipulate the SAM output in order to
 visualise the alignment on the *IGV* browser. Then based on these aligned reads
 we will find enriched regions using the peak caller *MACS*. We will then
 perform functional annotation and motif analysis on the predicted binding
@@ -68,30 +65,28 @@ reads to the mouse chromosome 1.
 # Alignment 
 
 There are a number of competing tools for short read alignment, each with its
-own set of strengths, weaknesses, and caveats. Here we will try *Bowtie*, a
+own set of strengths, weaknesses, and caveats. Here we will try *Bowtie2*, a
 widely used ultrafast, memory efficient short read aligner.
 
 
-*Bowtie* has a number of parameters in order to perform the alignment.
+*Bowtie2* has a number of parameters in order to perform the alignment.
 
 To view them all type
 
 ```
-bowtie --help
+bowtie2
 ```
 
-Bowtie uses indexed genome for the alignment in order to keep its memory
+Bowtie2 uses indexed genome for the alignment in order to keep its memory
 footprint small. Because of time constraints we will build the index only for
 one chromosome of the mouse genome. For this we need the chromosome sequence in
 fasta format. This is stored in a file named mm10, under the subdirectory
 `bowtie_index`.
 
-The indexed chromosome is generated using the command (you need to uncompressed
-the fasta file first):
+The indexed chromosome is generated using the following command:
 
 ```
-gunzip bowtie_index/mm10.fa.gz
-bowtie-build bowtie_index/mm10.fa bowtie_index/mm10
+bowtie2-build bowtie_index/mm10.fa.gz bowtie_index/mm10
 ```
 
 This command will output 6 files that constitute the index. These files that
@@ -103,20 +98,23 @@ To view if these files have been successfully created type:
 ls -l bowtie_index
 ```
 
-Now that the genome is indexed we can move on to the actual alignment. The
-first two arguments make sure that the output is in SAM format using the `-S`
-parameter and that Bowtie reports only uniquely mapped reads using the `-m 1`
-option. The following argument for bowtie is the basename of the index for the
-genome to be searched; in our case is `mm10`. The last argument is the name of
-the fastq file.
-
-
-Align the Oct4 reads using *Bowtie*:
+Now that the genome is indexed we can move on to the actual alignment. 
+Align the Oct4 reads using *Bowtie2*:
 
 ```
-gunzip fastq/Oct4.fastq.gz
-bowtie -m 1 -S bowtie_index/mm10 fastq/Oct4.fastq > Oct4.sam
+bowtie2 -m 1 -S -p 6 bowtie_index/mm10 fastq/Oct4.fastq.gz > Oct4.sam
 ```
+
+The first two arguments make sure that the output is in SAM format using the
+`-S` parameter and that Bowtie2 reports only uniquely mapped reads using the
+`-m 1` option. The `-p 6` argument instructs *Bowtie2* to parallelize the
+alignement across 6 cores, this makes it considerably faster. The next argument
+is the basename of the index for the genome to be searched; in our case is
+`bowtie_index/mm10`. The final argument is the name of the fastq file.
+
+Note: while the command is running there is no indication in the terminal that
+anything is happening. You can use the command `htop` in another terminal
+window to check activity on the computer.
 
 The above command outputs the alignment in SAM format and stores them in the
 file `Oct4.sam`.
@@ -124,18 +122,16 @@ file `Oct4.sam`.
 In general before you run *Bowtie*, you have to know which fastq format you
 have. The available fastq formats in bowtie are:
 
-```
---phred33-quals input quals are Phred+33 (default, same as --solexa-quals)
---phred64-quals input quals are Phred+64 (same as solexa1.3-quals)
---solexa-quals  input quals are from GA Pipeline version < 1.3
---solexa1.3-quals input quals are from GA Pipeline version >= 1.3
---integer-quals qualities are given as space-separated integers (not ASCII)
-```
+* `--phred33-quals` input quals are Phred+33 (default, same as --solexa-quals)  
+* `--phred64-quals` input quals are Phred+64 (same as solexa1.3-quals)  
+* `--solexa-quals`  input quals are from GA Pipeline version < 1.3  
+* `--solexa1.3-quals` input quals are from GA Pipeline version >= 1.3  
+* `--integer-quals` qualities are given as space-separated integers (not ASCII)  
 
 The fastq files we are working on is of Sanger format (Phred+33), which is the
-default for *Bowtie*.
+default for *Bowtie2*.
 
-*Bowtie* will take 2-3 minutes to align the file. This is fast compared to
+*Bowtie2* will take 2-3 minutes to align the file. This is fast compared to
 other aligners that sacrifice some speed to obtain higher sensitivity.
 
 Look at the SAM format by typing:
@@ -164,17 +160,15 @@ space.
 
 
 Convert SAM to BAM using samtools and store the output in the file `Oct4.bam`.
-You have to instruct samtools that the input is in SAM format (`-S`{.ngs}), the
-output should be in BAM format (`-b`{.ngs}) and that you want the output to be
-stored in the file specified by the `-o`{.ngs} option:
+You have to instruct samtools that the input is in SAM format (`-S`), the
+output should be in BAM format (`-b`) and that you want the output to be
+stored in the file specified by the `-o` option:
 
 ```
 samtools view -bSo Oct4.bam Oct4.sam
 ```
 
 # Visualise alignments in IGV
-
-
 
 It is often instructive to look at your data in a genome browser. Here, we use
 IGV, a stand-alone browser, which has the advantage of being installed locally
@@ -195,13 +189,11 @@ IGV is a stand-alone genome browser. Please check their website
 all the formats that IGV can display. For our visualisation purposes we will
 use the BAM and bigWig formats.
 
-
 When uploading a BAM file into the genome browser, the browser will look for
 the index of the BAM file in the same folder where the BAM files is. The index
 file should have the same name as the BAM file and the suffix `.bai`. Finally,
 to create the index of a BAM file you need to make sure that the file is sorted
 according to chromosomal coordinates. 
-
 
 Sort alignments according to chromosome position and store the result in the
 file called `Oct4.sorted.bam`:
@@ -217,43 +209,22 @@ samtools index Oct4.sorted.bam
 ```
 
 The indexing will create a file called `Oct4.sorted.bam.bai`. Note that you do
-no??t have to specify the name of the index file when running samtools.
-
+not have to specify the name of the index file when running samtools.
 
 Another way to visualize the alignments is to convert the BAM file into a
 bigWig file. The bigWig format is for display of dense, continuous data and the
 data will be displayed as a graph. The resulting bigWig files are in an indexed
 binary format.
 
-
-
-The BAM to bigWig conversion takes place in two steps. Firstly, we convert the
-BAM file into a bedgraph, called `Oct4.bedgraph`, using the tool
-genomeCoverageBed from BEDTools:
+We can convert the bam to a bigwig file using `bamCoverage` from DeepTools.
+By default DeepTools summarises the coverage over 50 base windows, this has the
+advantage of making the output file much smaller, however, we can get base
+level resolution by setting the bin size to 1. We can also take advantage of
+multiple processors to speed the process up.
 
 ``` 
-genomeCoverageBed -bg -ibam Oct4.sorted.bam -g bowtie_index/mouse.mm10.genome >
-Oct4.bedgraph
+bamCoverage --bam Oct4.sorted.bam --outFileName Oct4.bw --binSize 1 -p 6
 ```
-
-Then we convert the bedgraph into a binary graph, called `Oct4.bw`, using the
-tool bedGraphToBigWig from the UCSC tools:
-
-```
-bedGraphToBigWig Oct4.bedgraph bowtie_index/mouse.mm10.genome Oct4.bw
-```
-
-Both of the commands above take as input a file called `mouse.mm10.genome` that
-is stored under the subdirectory bowtie_index. These genome files are
-tab-delimited and describe the size of the chromosomes for the organism of
-interest. When using the UCSC Genome Browser, Ensembl, or Galaxy, you typically
-indicate which species/genome build you are working. The way you do this for
-BEDTools is to create a "genome" file, which simply lists the names of the
-chromosomes (or scaffolds, etc.) and their size (in basepairs).
-
-BEDTools includes pre-defined genome files for human and mouse in the
-`/genomes` directory included in the BEDTools distribution.
-
 
 Now we will load the data into the IGV browser for visualization. In order to
 launch IGV type the following on your terminal:
@@ -279,10 +250,7 @@ select Autoscale.
 In order to see the aligned reads of the BAM file, you need to zoom in to a
 specific region.
 
-
 ## Questions
-
-
 
 1. Look for gene Lemd1 in the search box. Can you see an Oct4 binding site in
    the Lemd1 gene?
@@ -295,7 +263,7 @@ specific region.
 # Alignment of control .fastq file
 
 In the `ChIP-seq` folder you will find another .fastq file called
-`Input.fastq`. Follow the steps described above for this dataset in order to
+`Input.fastq.gz`. Repeat the steps described above for this dataset in order to
 align the control reads to the mouse genome as well.
 
 **This step is essential to be able to perform the rest of the analyses.**
@@ -313,27 +281,26 @@ used for ChIP-Seq data alone, or with a control sample to increase specificity.
 Consult the MACS help file to see the options and parameters.
 
 ``` 
-macs2 --help macs2 callpeak --help 
+macs2 --help 
+macs2 callpeak --help 
 ```
 
 The input for MACS can be in ELAND, BED, SAM, BAM or BOWTIE formats (you just
 have to set the --format flag). Options that you will have to use include:
 
-``` 
--t to indicate the input ChIP file  
--c to indicate the name of the control file  
---format  the tag file format. If this option is not set MACS automatically  
-detects which format the file is.   
---name to set the name of the output files  
---gsize This is the mappable genome size. With the read length we have, 70% of  
-the genome is a fair estimation. Since in this analysis we include only reads  
-from chromosome 1, we will use as gsize 70% of the length of chromosome 1 (197  
-Mb). MACS also offers  shortcuts for human, 'mm' for mouse 'ce' for C. elegans  
-and 'dm' for fruitfly.   
---call-summits when this option is set MACS detects all subpeaks in each
-enriched region and returns their summits
---pvalue the P-value cutoff for peak detection. 
-```
+* `-t` to indicate the input ChIP file    
+* `-c` to indicate the name of the control file    
+* `--format`  the tag file format. If this option is not set MACS automatically
+  detects which format the file is.     
+* `--name` to set the name of the output files    
+* `--gsize` This is the mappable genome size. With the read length we have, 70%
+  of the genome is a fair estimation. Since in this analysis we include only
+  reads from chromosome 1, we will use as gsize 70% of the length of chromosome 
+  1 (197 Mb). MACS also offers  shortcuts for human, 'mm' for mouse 'ce' for 
+  *C. elegans* and 'dm' for fruitfly.     
+* `--call-summits` when this option is set MACS detects all subpeaks in each  
+  enriched region and returns their summits  
+* `--pvalue` the P-value cutoff for peak detection.   
 
 
 Now run macs using the following command:
@@ -350,22 +317,13 @@ summit height).
 MACS generates its peak files in a file format called .narrowPeak file. This is
 a simple text format containing genomic locations, specified by chromosome,
 begin and end positions, and information on the statistical significance of
-each called peak.
-
-See
-
-[http://genome.ucsc.edu/FAQ/FAQformat.html#format12](http://genome.ucsc.edu/FAQ/FAQformat.html#format12)
-
-for details.
+each called peak.  Details of the narrowPeak format can be found [here](http://genome.ucsc.edu/FAQ/FAQformat.html#format12).
 
 NarrowPeak files can also be uploaded to IGV or other genome browsers.
-
 
 Try uploading the peak file generated by MACS to IGV. Find the first peak in
 the file (use the head command to view the beginning of the `.narrowPeak`
 file).
-
-
 
 ## Questions
 1. Is the first peak that was called convincing to you?
@@ -412,7 +370,7 @@ R
 
 ``` 
 #Load requied R libraries 
-library(dplyr)
+library(tidyvers)
 library(ChIPseeker) 
 library(TxDb.Mmusculus.UCSC.mm10.ensGene) 
 library(clusterProfiler)
@@ -438,10 +396,12 @@ peakAnno <- annotatePeak(peak,
 peakTab <- as.data.frame(peakAnno)
 
 #Add Gene Symbols 
-geneSymbols <- data.frame(select(org.Mm.eg.db,
-                                 keys = peakTab$geneId, 
-                                 columns = c('ENSEMBL', 'SYMBOL'), 
-                                 keytype = 'ENSEMBL'))
+geneSymbols <- select(org.Mm.eg.db,
+                      keys = peakTab$geneId, 
+                      columns = c('ENSEMBL', 'SYMBOL'), 
+                      keytype = 'ENSEMBL') %>%
+               as_tibble()
+
 # This returns multiple results per an ENSEMBL ID. Let's just keep the first
 # results for each.
 geneSymbols <- geneSymbols[!duplicated(geneSymbols$SYMBOL),]
@@ -450,11 +410,7 @@ geneSymbols <- geneSymbols[!duplicated(geneSymbols$SYMBOL),]
 peakTab <- left_join(peakTab, geneSymbols, by=c(geneId="ENSEMBL"))
 
 #Export the table 
-write.table(peaktab, 
-            file = "Oct4_annotated_peaks.txt", 
-            row.names=FALSE, 
-            sep="\t", 
-            na="NA")
+write_tsv(peakTab, path = "Oct4_annotated_peaks.tsv")
 
 #Export a list of the closest genes
 
@@ -531,9 +487,10 @@ bedtools slop --help
 The mouse genome sequence is available in FASTA format in the `bowtie_index`
 directory. You can now use `bedtools` to extract the sequences around the Oct4
 peak summits in FASTA format, which we save in a file named
-`Oct4_top300_summits.fa`.
+`Oct4_top300_summits.fa`. We need to unzip the fasta file first.
 
 ```
+gunzip bowtie_index/mm10.fa.gz
 bedtools getfasta -fi bowtie_index/mm10.fa -bed Oct4_top300_summits.bed \
     -fo Oct4_top300_summits.fa
 ```
@@ -587,7 +544,7 @@ suite of tools for visualization, quality control and normalization of ChIP-seq
 data.  We will start by looking at the genome-wide profiles of the selected
 histone marks around TSS. A bed file of the TSS can be created using the UCSC
 Table Browser at http://genome.ucsc.edu/cgi-bin/hgTables. We have prepared the
-file for the mouse genome mm10 for you as TSS_mm10.bed in the ChIP-seq folder.
+file for the mouse genome mm10 for you as TSS_mm10.bed.
 
 First, to go in the correct directory, type:
 
@@ -598,17 +555,18 @@ cd ./Histone_modifications
 We will need to index the bam files we want to use:
 
 ```
-samtools index H3K4me3.bam samtools index Input.bam
+samtools index H3K4me3.bam
+samtools index Control.bam
 ```
 
 To analyse the ChIP-seq profile, the first step is to create a bigwig file from
-the BAM file that is going to be used for plotting, normalised by the Input,
+the BAM file that is going to be used for plotting, normalised by the Control,
 using bamCompare:
 
 ```
 bamCompare --help
 
-bamCompare -b1 H3K4me3.bam -b2 Input.bam -o Log2Ratio_H3K4me3_INPUT.bw
+bamCompare -b1 H3K4me3.bam -b2 Control.bam -o Log2Ratio_H3K4me3_INPUT.bw -p 6
 ```
 
 Then create a matrix, which is required for plotting the ChIP profiles, with
@@ -617,15 +575,16 @@ computeMatrix, using the mode to center profiles around TSS or TTS:
 ```
 computeMatrix --help
 
-computeMatrix reference-point -S Log2Ratio_H3K4me3_INPUT.bw -R ../TSS_mm10.bed \
-     -a 500 -b 500 -out Matrix_log2_H3K4me3_allTSS.mat.gz
+computeMatrix reference-point -S Log2Ratio_H3K4me3_INPUT.bw -R TSS_mm10.bed \
+     -a 500 -b 500 -out Matrix_log2_H3K4me3_allTSS.mat.gz -p 6
 ```
 
 To plot profiles of ChIP-seq, use plotProfile:
 
 ```
-plotProfile --help plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz -out
-Profile_log2_H3K4me3_allTSS.png
+plotProfile --help 
+plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz \ 
+    -out Profile_log2_H3K4me3_allTSS.png
 ```
 
 To plot hetmaps of the ChIP-seq signal at each TSS, use plotHeatmap.  Find how
@@ -664,16 +623,7 @@ Hope you enjoyed it!
 Don’t hesitate to ask any questions and feel free to contact us any time (email
 addresses on the front page).
 
-
-
-
-
-
 # Bonus Exercise I: How to check if the ChIP worked
-
-
-
-
 
 Before to explore any results form ChIP-seq data, it is important to verify if
 the ChIP worked. In other words,  did the antibody-treatment enrich
@@ -693,14 +643,10 @@ First, you should go back to the correct directory:
 cd ~/Course_Materials/Practicals/ChIPseq
 ```
 
-
-
-
 To test if the Oct4 ChIP worked, type:
 
 ```
-plotFingerprint -b Oct4.sorted.bam Input.sorted.bam -plot
-Oct4_fingerprint.png
+plotFingerprint -b Oct4.sorted.bam Input.sorted.bam -plot Oct4_fingerprint.png
 ```
 
 ## Questions
@@ -716,27 +662,38 @@ the ChIP worked?  \hrulefill\par \hrulefill\par
 # Bonus Exercise II: How to remove duplicates by Using Picard
 
 
-Duplicate reads are the ones having the same start and end coordinates. This may be the result of technical duplication (too many PCR cycles), or over-sequencing (very high fold coverage). It is very important to put the duplication level in context of your experiment. For example, duplication level in targeted or re-sequencing projects may mean different than in RNA-seq experiments. In RNA-seq experiments over-sequencing is usually necessary when detecting the low expressed transcripts.
-The duplication level computed by **FastQC** is based on sequence identity at the end of reads. Another tool, **Picard**, determines duplicates based on identical start and end positions.
+Duplicate reads are the ones having the same start and end coordinates. This
+may be the result of technical duplication (too many PCR cycles), or
+over-sequencing (very high fold coverage). It is very important to put the
+duplication level in context of your experiment. For example, duplication level
+in targeted or re-sequencing projects may mean different than in RNA-seq
+experiments. In RNA-seq experiments over-sequencing is usually necessary when
+detecting the low expressed transcripts.
+
+The duplication level computed by **FastQC** is based on sequence identity at
+the end of reads. Another tool, **Picard**, determines duplicates based on
+identical start and end positions.
 
 
-Picard is a suite of tools for performing many common tasks with SAM/BAM format files. For more information see the Picard website and information about the various command-line tools available:
+Picard is a suite of tools for performing many common tasks with SAM/BAM format
+files. For more information see the 
+[Picard website](http://broadinstitute.github.io/picard/) and information about
+the various command-line tools.
 
-[http://picard.sourceforge.net](http://picard.sourceforge.net)
-
-[http://picard.sourceforge.net/command-line-overview.shtml](http://picard.sourceforge.net/command-line-overview.shtml)
-
-One of the Picard tools (MarkDuplicates) can be used to analyse and remove duplicates from the raw sequence data. The input for Picard is a sorted alignment file in `.bam` format. Short read aligners such as, bowtie, BWA, tophat etc. can be used to align fastq files against a reference genome to generate SAM/BAM alignment format.
-However interested users can use the following general command to run the MarkDuplicates tool at their leisure and only need to provide a BAM file for the INPUT argument.
-
-
+One of the Picard tools (MarkDuplicates) can be used to analyse and remove
+duplicates from the raw sequence data. The input for Picard is a sorted
+alignment file in `.bam` format. 
 
 To remove duplicates reads for the Input, Type:
 
 ```
-java -jar /applications/local/picard-tools/picard-tools/picard.jar MarkDuplicates \
-  INPUT=Input.sorted.bam  VALIDATION_STRINGENCY=LENIENT OUTPUT=Input.sorted.picard.dup  \
-  METRICS_FILE=Input.sorted.picard.metric  ASSUME_SORTED=true REMOVE_DUPLICATES=true
+java -jar /applications/local/picard/picard-2.20.6/picard.jar MarkDuplicates \
+    INPUT=Input.sorted.bam \
+    VALIDATION_STRINGENCY=LENIENT \
+    OUTPUT=Input.sorted.picard.dup  \
+    METRICS_FILE=Input.sorted.picard.metric \
+    ASSUME_SORTED=true \
+    REMOVE_DUPLICATES=true
 ```
 
 Changing the code, remove duplicates reads for the Oct4 ChIP.
