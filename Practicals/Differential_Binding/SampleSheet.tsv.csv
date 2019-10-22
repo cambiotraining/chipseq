@@ -1,0 +1,15 @@
+CellLine	SampleType	Replicate	Deduplicated	Filename
+gd7	input1		No	gd7_input1_chr2L.bam
+gd7	input1		Yes	gd7_input1_chr2L.dedup.bam
+gd7	input2		No	gd7_input2_chr2L.bam
+gd7	input2		Yes	gd7_input2_chr2L.dedup.bam
+gd7	H3K27ac	rep1	No	gd7_K27ac_rep1_chr2L.bam
+gd7	H3K27ac	rep1	Yes	gd7_K27ac_rep1_chr2L.dedup.bam
+gd7	H3K27ac	rep2	No	gd7_K27ac_rep2_chr2L.bam
+gd7	H3K27ac	rep2	Yes	gd7_K27ac_rep2_chr2L.dedup.bam
+tl10b	input		No	tl10b_input_chr2L.bam
+tl10b	input		Yes	tl10b_input_chr2L.dedup.bam
+tl10b	H3K27ac	rep1	No	tl10b_K27ac_rep1_chr2L.bam
+tl10b	H3K27ac	rep1	Yes	tl10b_K27ac_rep1_chr2L.dedup.bam
+tl10b	H3K27ac	rep2	No	tl10b_K27ac_rep2_chr2L.bam
+tl10b	H3K27ac	rep2	Yes	tl10b_K27ac_rep2_chr2L.dedup.bam
