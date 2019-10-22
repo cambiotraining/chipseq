@@ -1,14 +1,16 @@
 ---
 title: "Introduction to ChIP-seq"
-author: 
- - name: Ashley Sawle
- - name: Based on slides by Myrto Kostadima
+author:
+- name: Sankari Nagarajan
+- name: Based on slides by Myrto Kostadima and Ashley Sawle
 output:
   ioslides_presentation:
     css: css/stylesheet.css
     logo: images/university-of-cambridge.png
     smaller: yes
     widescreen: yes
+  beamer_presentation: default
+  slidy_presentation: default
 ---
 
 ```{r setup, include = FALSE}
@@ -100,7 +102,7 @@ knitr::opts_chunk$set(echo = FALSE)
 +----------------------------------------------------+---------------------------------------------------------------------------------+
 | <span class="smtabtext">Source of noise</span>     | <span class="smtabtext"> Sequencing bias, GC bias, Sequencing error </span>   |
 +----------------------------------------------------+---------------------------------------------------------------------------------+
-| <span class="smtabtext">Amount DNA required</span> | <span class="smtabtext">Low 10 - 50 ng</span> |
+| <span class="smtabtext">Amount DNA required</span> | <span class="smtabtext">Low 1 - 50 ng</span> |
 +----------------------------------------------------+---------------------------------------------------------------------------------+
 | <span class="smtabtext">Multiplexing</span>        | <span class="smtabtext">Possible</span> |
 +----------------------------------------------------+---------------------------------------------------------------------------------+
@@ -124,8 +126,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 |          | Transcription factor binding | Histone modifications and Nucleosome positioning |
 |:--------:|:-----------------------------|:-------------------------------------------------|
-| Crosslinking | Formaldehyde | Usually not |
-| Fragmentation | Sonication(200-600bp) | MNase Treatment |
+| Crosslinking | Formaldehyde, double cross-linking for tough proteins | Usually not |
+| Fragmentation | Sonication(200-600bp) | MNase Treatment, CUT&RUN |
 | Immunoprecipitation | Antibody specific to protein |Antibody specific to histonemodification or histone |
 
 
@@ -149,11 +151,14 @@ and <span class="pkht">specific</span> antibody will give a high level of enrich
     
 * Check your antibody ahead if possible
 
-    * <span class="pt">Western blotting to check the reactivity of the antibody with unmodified and non-histone proteins</span>
+    * <span class="pt">Western blotting to check the reactivity of the antibody with unmodified and non-histone proteins and IHC for the efficiency of antibody to work under crosslinking conditions</span>
     
 * Optimize ChIP protocol
 
     * <span class="pt">If known positives and negatives are available, perform qPCR to demonstrate enrichment for these regions</span>
+    
+* Optimize ChIP protocol using FLAG tag in case of antibody issues
+
 
 ## Experimental Design
 
