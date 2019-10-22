@@ -1,0 +1,39 @@
+---
+title: "Differential Binding Analysis"
+author: 
+ - name: Ashley Sawle
+ - name: Based on slides by Denis Seyres
+output:
+  ioslides_presentation:
+    css: css/stylesheet.css
+    logo: images/university-of-cambridge.png
+    smaller: yes
+    widescreen: yes
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Differential binding analysis
+
+* The same **transcription factor** has different binding profiles in different conditions
+
+<img src="images/Slide1_TF.png"  class="centerimg" style="width: 50%" />
+
+* The same **histone modification** has different patterns of occurrence patterns in different conditions
+
+<img src="images/Slide1_HM.png"  class="centerimg" style="width: 50%" />
+
+## Differential binding analysis
+
+<img src="images/Slide2.svg"  class="centerimg" style="width: 80%" />
+
+## Strategies {#less_space_after_title}
+
+<img src="images/Slide3.png"  class="centerimg" style="width: 60%" />
+
+## Count-based methods
+
+<img src="images/Slide4.svg"  class="centerimg" style="width: 80%" />
+
