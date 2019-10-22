@@ -35,5 +35,37 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Count-based methods
 
-<img src="images/Slide4.svg"  class="centerimg" style="width: 80%" />
+<img src="images/Slide4.svg"  class="centerimg" style="width: 70%; margin-top: 60px;" />
+
+## Tools
+
+<img src="images/Slide5.png"  class="centerimg" style="width: 90%" />
+
+<div style="text-align: right; margin-top: 60px;">
+Steinhauser et al., Briefings in Bioinformatics (2016) 
+[doi.org: 10.1093/bib/bbv110](https://doi.org/10.1093/bib/bbv110)
+</div>
+
+## Peak Calling comparison - Transcription Factors (FOXA1) 
+
+<img src="images/Slide_6_DB_Peaks.png"  class="centerimg" style="width: 85%" />
+
+## Peak Calling comparison - Transcription Factors (FOXA1) {#less_space_after_title}
+
+<img src="images/Slide_7.png"  class="centerimg" style="width: 75%" />
+
+## Key Points
+
+* There are differences between the tools to perform differential binding
+  analysis  
+
+* Methods considering replicates are more robust than those considering single
+  data sets only
+
+* Some tools give good results with default parameters e.g. ChIPComp and
+  diffBind when replicates are available
+
+* The other tools require more extensive fine-tuning of parameters to achieve
+  satisfactory results
+
 
