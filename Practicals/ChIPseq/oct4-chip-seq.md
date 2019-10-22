@@ -1,7 +1,5 @@
 # ChIPseq practical
 
-##### 3rd May 2019, Cambridge, UK
-
 ## Resources used
 
 [Bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml)
