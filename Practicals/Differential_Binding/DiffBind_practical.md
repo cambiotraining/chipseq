@@ -89,7 +89,7 @@ not PCR artefacts, we use the deduplicated files for peak calling.
 First, go to the folder where the bam files are stored and create the output folder.
 
 ```
-cd ~/Desktop/Course_Materials/Practicals/DiffBind/bam
+cd ~/Desktop/Course_Materials/Practicals/Differential_Binding/bam
 mkdir dedup_peaks
 ```
 
@@ -103,6 +103,7 @@ peaks. For effective genome size we use 90% of chr2L, which is 21Mb.
 Run the following to call peaks for the **gd7** cells:
 
 ```
+# gd7 cells
 macs2 callpeak -t gd7_K27ac_rep1_chr2L.dedup.bam \
     -c gd7_input1_chr2L.dedup.bam \
     --format BAM \
@@ -120,7 +121,20 @@ macs2 callpeak -t gd7_K27ac_rep2_chr2L.dedup.bam \
     --call-summits
 ```
 
-Now modify the code the call peaks for the **tl10b** cells.
+Run the following to call peaks for replicate 1 of the **tl10b** cells:
+
+```
+macs2 callpeak -t tl10b_K27ac_rep1_chr2L.dedup.bam \
+    -c tl10b_input_chr2L.dedup.bam \
+    --format BAM \
+    --name dedup_peaks/tl10b_H3K27ac_rep1 \
+    --gsize 21000000 \
+    --qvalue 0.01 \
+    --call-summits
+```
+
+Now modify the last bit of code to the call peaks for replicate 2 of the
+**tl10b** cells. 
 
 The next steps will be performed within RStudio, please open it and set the
 working directory to `~/Desktop/Course_Materials/Practicals/DiffBind/bam`. For
