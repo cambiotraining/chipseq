@@ -19,27 +19,27 @@ knitr::opts_chunk$set(echo = FALSE)
 
 * The same **transcription factor** has different binding profiles in different conditions
 
-<img src="images/Slide1_TF.png"  class="centerimg" style="width: 50%" />
+<img src="images/Slide_1_TF.png"  class="centerimg" style="width: 50%" />
 
 * The same **histone modification** has different patterns of occurrence patterns in different conditions
 
-<img src="images/Slide1_HM.png"  class="centerimg" style="width: 50%" />
+<img src="images/Slide_1_HM.png"  class="centerimg" style="width: 50%" />
 
 ## Differential binding analysis
 
-<img src="images/Slide2.svg"  class="centerimg" style="width: 80%" />
+<img src="images/Slide_2.svg"  class="centerimg" style="width: 80%" />
 
 ## Strategies {#less_space_after_title}
 
-<img src="images/Slide3.png"  class="centerimg" style="width: 60%" />
+<img src="images/Slide_3.png"  class="centerimg" style="width: 60%" />
 
 ## Count-based methods
 
-<img src="images/Slide4.svg"  class="centerimg" style="width: 70%; margin-top: 60px;" />
+<img src="images/Slide_4.svg"  class="centerimg" style="width: 70%; margin-top: 80px;" />
 
 ## Tools
 
-<img src="images/Slide5.png"  class="centerimg" style="width: 90%" />
+<img src="images/Slide_5.png"  class="centerimg" style="width: 90%" />
 
 <div style="text-align: right; margin-top: 60px;">
 Steinhauser et al., Briefings in Bioinformatics (2016) 
@@ -67,5 +67,4 @@ Steinhauser et al., Briefings in Bioinformatics (2016)
 
 * The other tools require more extensive fine-tuning of parameters to achieve
   satisfactory results
-
 
