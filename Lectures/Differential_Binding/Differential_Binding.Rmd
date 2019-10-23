@@ -1,8 +1,8 @@
 ---
 title: "Differential Binding Analysis"
-author: 
- - name: Ashley Sawle
- - name: Based on slides by Denis Seyres
+author:
+- name: Ashley Sawle
+- name: Based on slides by Denis Seyres
 output:
   ioslides_presentation:
     css: css/stylesheet.css
@@ -68,3 +68,34 @@ Steinhauser et al., Briefings in Bioinformatics (2016)
 * The other tools require more extensive fine-tuning of parameters to achieve
   satisfactory results
 
+## DiffBind workflow
+
+<img src="images/Slide_10a.svg"  class="centerimg" style="width: 70%;" />
+
+## DiffBind workflow
+
+<img src="images/Slide_10b.svg"  class="centerimg" style="width: 70%;" />
+
+## DiffBind workflow
+
+<img src="images/Slide_10c.svg"  class="centerimg" style="width: 70%;" />
+
+## DiffBind workflow
+
+<img src="images/Slide_10d.svg"  class="centerimg" style="width: 70%;" />
+
+## DiffBind workflow
+
+<img src="images/Slide_10e.svg"  class="centerimg" style="width: 70%;" />
+
+## DiffBind workflow
+
+<img src="images/Slide_10f.svg"  class="centerimg" style="width: 70%;" />
+
+## DiffBind workflow
+
+<img src="images/Slide_10g.svg"  class="centerimg" style="width: 70%;" />
+
+##
+
+### THANK YOU

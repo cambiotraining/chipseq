@@ -10,12 +10,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1790.9895mm"
-   height="892.93878mm"
-   viewBox="0 0 1790.9895 892.93878"
+   height="1229.0352mm"
+   viewBox="0 0 1790.9895 1229.0352"
    version="1.1"
    id="svg4668"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Slide_4.svg">
+   sodipodi:docname="Slide_10a.svg">
   <defs
      id="defs4662">
     <marker
@@ -86,9 +86,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="3464.4118"
-     inkscape:cy="1792.8119"
+     inkscape:zoom="0.14743479"
+     inkscape:cx="5303.6193"
+     inkscape:cy="2582.0161"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -109,7 +109,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -117,7 +117,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(133.58145,393.63382)">
+     transform="translate(133.58145,729.73022)">
     <rect
        y="-56.444031"
        x="-131.08145"
@@ -267,5 +267,23 @@
        d="M 1003.3623,-38.286559 H 763.3436 V -151.72561"
        style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:14.00000039, 7.00000019;stroke-dashoffset:0;stroke-opacity:1"
        sodipodi:nodetypes="ccc" />
+    <rect
+       y="-391.13382"
+       x="-131.08145"
+       height="144.12663"
+       width="814.56641"
+       id="rect3875"
+       style="fill:#ffffff;fill-opacity:1;stroke:#3b3b3b;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text3879"
+       y="-291.32181"
+       x="-19.293467"
+       style="font-style:normal;font-weight:normal;font-size:74.43260193px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1"
+       xml:space="preserve"><tspan
+         style="stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1"
+         y="-291.32181"
+         x="-19.293467"
+         id="tspan3877"
+         sodipodi:role="line">Sites of Interest</tspan></text>
   </g>
 </svg>

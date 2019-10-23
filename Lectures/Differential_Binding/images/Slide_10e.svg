@@ -10,12 +10,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1790.9895mm"
-   height="892.93878mm"
-   viewBox="0 0 1790.9895 892.93878"
+   height="1229.0352mm"
+   viewBox="0 0 1790.9895 1229.0352"
    version="1.1"
    id="svg4668"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="Slide_4.svg">
+   sodipodi:docname="Slide_10e.svg">
   <defs
      id="defs4662">
     <marker
@@ -86,9 +86,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.175"
-     inkscape:cx="3464.4118"
-     inkscape:cy="1792.8119"
+     inkscape:zoom="0.25919383"
+     inkscape:cx="3384.547"
+     inkscape:cy="2322.5861"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -117,7 +117,32 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(133.58145,393.63382)">
+     transform="translate(133.58145,729.73022)">
+    <rect
+       y="-391.13382"
+       x="-131.08145"
+       height="144.12663"
+       width="814.56641"
+       id="rect3875"
+       style="fill:#ffffff;fill-opacity:1;stroke:#3b3b3b;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text3879"
+       y="-291.32181"
+       x="-99.032333"
+       style="font-style:normal;font-weight:normal;font-size:74.43260193px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#8b0000;stroke-width:1.86081493;stroke-opacity:1;"
+       xml:space="preserve"><tspan
+         style="stroke:#8b0000;stroke-width:1.86081493;stroke-opacity:1;"
+         y="-291.32181"
+         x="-99.032333"
+         id="tspan3877"
+         sodipodi:role="line">Consensus Peak Set</tspan></text>
+    <rect
+       y="-727.23022"
+       x="513.60931"
+       height="144.12663"
+       width="77.776939"
+       id="rect4726"
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
        y="-56.444031"
        x="-131.08145"
@@ -125,35 +150,6 @@
        width="814.56641"
        id="rect4676"
        style="fill:#ffffff;fill-opacity:1;stroke:#3b3b3b;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-    <text
-       id="text4680"
-       y="36.153667"
-       x="-73.482437"
-       style="font-style:normal;font-weight:normal;font-size:74.43260193px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1"
-       xml:space="preserve"><tspan
-         style="stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1"
-         y="36.153667"
-         x="-73.482437"
-         id="tspan4678"
-         sodipodi:role="line">Hypothesis Testing</tspan></text>
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#3b3b3b;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4687"
-       width="814.56641"
-       height="144.12663"
-       x="-131.08145"
-       y="-391.13382" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:74.43260193px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1"
-       x="-19.293467"
-       y="-291.32181"
-       id="text4691"><tspan
-         sodipodi:role="line"
-         id="tspan4689"
-         x="-19.293467"
-         y="-291.32181"
-         style="stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1">Sites of Interest</tspan></text>
     <rect
        y="-346.05634"
        x="1003.4291"
@@ -267,5 +263,138 @@
        d="M 1003.3623,-38.286559 H 763.3436 V -151.72561"
        style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:14.00000039, 7.00000019;stroke-dashoffset:0;stroke-opacity:1"
        sodipodi:nodetypes="ccc" />
+    <g
+       transform="translate(0,-336.62724)"
+       id="g3885">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:7;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 278.19048,-240.93568 V -76.138098"
+         id="path3881"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:#000000;fill-opacity:1;stroke:#3b3b3b;stroke-width:3.12434483;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         inkscape:transform-center-x="-1.1519585e-06"
+         inkscape:transform-center-y="9.4548986"
+         d="m 278.19048,-66.079505 -10.17735,-28.36466 -10.17736,-28.364785 20.35471,19.68332 20.35471,-19.68332 -10.17736,28.364785 z"
+         id="path3883"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccccc" />
+    </g>
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4758"
+       width="77.776939"
+       height="144.12663"
+       x="421.51065"
+       y="-727.23022" />
+    <rect
+       y="-727.23022"
+       x="329.41196"
+       height="144.12663"
+       width="77.776939"
+       id="rect4760"
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4762"
+       width="77.776939"
+       height="144.12663"
+       x="237.31328"
+       y="-727.23022" />
+    <rect
+       y="-727.23022"
+       x="145.2146"
+       height="144.12663"
+       width="77.776939"
+       id="rect4764"
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4766"
+       width="77.776939"
+       height="144.12663"
+       x="53.115929"
+       y="-727.23022" />
+    <rect
+       y="-727.23022"
+       x="-38.982769"
+       height="144.12663"
+       width="77.776939"
+       id="rect4768"
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4770"
+       width="77.776939"
+       height="144.12663"
+       x="-131.08145"
+       y="-727.23022" />
+    <rect
+       y="-727.23022"
+       x="605.70801"
+       height="144.12663"
+       width="77.776939"
+       id="rect4772"
+       style="fill:none;fill-opacity:1;stroke:#3b3b3b;stroke-width:4.99999952;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       style="fill:#ffffff;fill-opacity:0.4278075;stroke:none;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4774"
+       width="551.99707"
+       height="67.88929"
+       x="-16.837246"
+       y="-685.26801" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:74.43260193px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1"
+       x="-19.293467"
+       y="-627.41821"
+       id="text3891"><tspan
+         sodipodi:role="line"
+         id="tspan3889"
+         x="-19.293467"
+         y="-627.41821"
+         style="stroke:#2e008b;stroke-width:1.86081493;stroke-opacity:1">Peaks (MACS2)</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#3b3b3b;stroke-width:5;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect1242"
+       width="350.10544"
+       height="117.58601"
+       x="492.6886"
+       y="-210.51862" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:74.43260193px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#8b0000;stroke-width:1.86081493;stroke-opacity:1"
+       x="537.44794"
+       y="-123.97693"
+       id="text1246"><tspan
+         sodipodi:role="line"
+         id="tspan1244"
+         x="537.44794"
+         y="-123.97693"
+         style="stroke:#8b0000;stroke-width:1.86081493;stroke-opacity:1">Counts</tspan></text>
+    <text
+       id="text1321"
+       y="40.765137"
+       x="-112.33132"
+       style="font-style:normal;font-weight:normal;font-size:69.97709656px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#8b0000;stroke-width:1.86081505;stroke-opacity:1"
+       xml:space="preserve"
+       transform="scale(1.0009397,0.9990612)"><tspan
+         style="stroke:#8b0000;stroke-width:1.86081505;stroke-opacity:1"
+         y="40.765137"
+         x="-112.33132"
+         id="tspan1319"
+         sodipodi:role="line">nBiomial Linear Model</tspan></text>
+    <text
+       transform="scale(1.0145543,0.98565448)"
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:32.40398026px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#8b0000;stroke-width:1.86081505;stroke-opacity:1"
+       x="679.58044"
+       y="50.36874"
+       id="text1325"><tspan
+         sodipodi:role="line"
+         id="tspan1323"
+         x="679.58044"
+         y="50.36874"
+         style="stroke:#464646;stroke-width:1.86081505;stroke-opacity:1">DESeq2/edgeR</tspan></text>
   </g>
 </svg>
