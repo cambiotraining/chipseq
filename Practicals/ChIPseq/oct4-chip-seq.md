@@ -141,6 +141,13 @@ head -n 10 Oct4.sam
 Look at https://samtools.github.io/hts-specs/SAMv1.pdf to get more imformation
 about SAM format.
 
+The second field in each alignment record is the "SAM flag". This provides
+information about the read read alignment, e.g if the read is paired.  The
+following website provides a simple means of interpreting these flags:
+
+https://broadinstitute.github.io/picard/explain-flags.html
+
+
 ## Questions
 
 1. Can you distinguish between the header of the SAM format and the actual alignments?
@@ -148,6 +155,8 @@ about SAM format.
 2. What kind of information does the header provide you with?
 
 3. To which chromosome are the reads mapped?
+
+4. To which strand is the first read mapped (use the flag)?
 
 # Manipulate SAM output
 
@@ -241,9 +250,13 @@ file `Oct4.sorted.bam`.
 
 Repeat these steps in order to load `Oct4.bw` as well.
 
-Select chr1 from the drop down menu on the top left. Right click on the name of
-Oct4.bw and choose Maximum under the Windowing Function. Right click again and
-select Autoscale.
+Adjust the display as follows:
+
+1. Select chr1 from the drop down menu on the top left. 
+
+2. Right click on the name of Oct4.bw and choose Maximum under the Windowing Function. 
+
+3. Right click again and select Autoscale.
 
 In order to see the aligned reads of the BAM file, you need to zoom in to a
 specific region.
@@ -260,11 +273,12 @@ specific region.
 
 # Alignment of control .fastq file
 
-In the `ChIP-seq` folder you will find another .fastq file called
+In the `fastq` folder you will find another .fastq file called
 `Input.fastq.gz`. Repeat the steps described above for this dataset in order to
-align the control reads to the mouse genome as well.
+align the control reads to the mouse genome as well. The final file should be
+called "Input.sorted.bam".
 
-**This step is essential to be able to perform the rest of the analyses.**
+<span style="color: red">**This step is essential to be able to perform the rest of the analyses.**</span>
 
 # Finding enriched areas using MACS
 
@@ -315,7 +329,8 @@ summit height).
 MACS generates its peak files in a file format called .narrowPeak file. This is
 a simple text format containing genomic locations, specified by chromosome,
 begin and end positions, and information on the statistical significance of
-each called peak.  Details of the narrowPeak format can be found [here](http://genome.ucsc.edu/FAQ/FAQformat.html#format12).
+each called peak.  Details of the narrowPeak format can be found 
+[here](http://genome.ucsc.edu/FAQ/FAQformat.html#format12).
 
 NarrowPeak files can also be uploaded to IGV or other genome browsers.
 
@@ -324,18 +339,18 @@ the file (use the head command to view the beginning of the `.narrowPeak`
 file).
 
 ## Questions
+
 1. Is the first peak that was called convincing to you?
 
 2. Compare the Oct4 peak profile with that of H3K4me3 histone modification. To
    do so, upload the `H3K4me3.bw` file, which is located within the ChIP-seq
-folder.
+   folder.
 
 3. In IGV jump to location 1:35,987,885-36,101,395 for a sample peak. Do you
    think H3K4me3 peaks regions contain one or more modification sites? What
-about the Oct4 peak located within the Lemd1 gene?
+   about the Oct4 peak located within the Lemd1 gene?
 
 # Annotation: From peaks to biological interpretation
-
 
 In order to biologically interpret the results of ChIP-seq experiments, it is
 usually recommended to look at the genes and other annotated elements that are
@@ -345,8 +360,6 @@ ChIPseeker
 We need to modify the peak files into BED format, which is a tab-delimited file
 that contains information on chromosome, start and end position for each
 region. See http://genome.ucsc.edu/FAQ/FAQformat.html#format1 for details.
-
-
 
 To convert `Oct4_peaks.narrowPeak` to a BED file,  type:
 
@@ -368,7 +381,7 @@ R
 
 ``` 
 #Load requied R libraries 
-library(tidyvers)
+library(tidyverse)
 library(ChIPseeker) 
 library(TxDb.Mmusculus.UCSC.mm10.ensGene) 
 library(clusterProfiler)
@@ -421,10 +434,10 @@ Finally, quit R
 quit()
 ```
 
-This list of closest downstream genes found under the link **The Full
-Annotation File** can be the basis of further analysis. For instance, you could
-look at the Gene Ontology terms associated with these genes to get an idea of
-the biological processes that may be affected. Web-based tools like DAVID
+This list of closest downstream genes found in *Oct4_annotated_peaks.tsv* could
+be the basis of further analysis. For instance, you could look at the Gene
+Ontology terms associated with these genes to get an idea of the biological
+processes that may be affected. Web-based tools like DAVID
 (http://david.abcc.ncifcrf.gov) or GOstat (http://gostat.wehi.edu.au) take a
 list of genes and return the enriched GO categories.
 
@@ -469,8 +482,7 @@ for the mouse genome. This file is required by 'bedtools slop' to add 30bp
 around the summit peak.
 
 ```
-mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A \ 
-    -e "select chrom,size from mm10.chromInfo" > mm10.genome
+mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e "select chrom,size from mm10.chromInfo" > mm10.genome
 
 bedtools slop -b 30 -i Oct4_top300_summits.sorted.bed -g mm10.genome \
     > Oct4_top300_summits.bed
@@ -581,11 +593,11 @@ To plot profiles of ChIP-seq, use plotProfile:
 
 ```
 plotProfile --help 
-plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz \ 
+plotProfile -m Matrix_log2_H3K4me3_allTSS.mat.gz \
     -out Profile_log2_H3K4me3_allTSS.png
 ```
 
-To plot hetmaps of the ChIP-seq signal at each TSS, use plotHeatmap.  Find how
+To plot heatmaps of the ChIP-seq signal at each TSS, use plotHeatmap.  Find how
 to use plotHeatmap using the help function and generate a heatmap for H3K4me3
 
 ```
