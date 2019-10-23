@@ -100,7 +100,7 @@ Now that the genome is indexed we can move on to the actual alignment.
 Align the Oct4 reads using *Bowtie2*:
 
 ```
-bowtie2 -m 1 -S -p 6 bowtie_index/mm10 fastq/Oct4.fastq.gz > Oct4.sam
+bowtie2 -p 6 -x bowtie_index/mm10 -U fastq/Oct4.fastq.gz -S Oct4.sam
 ```
 
 The first two arguments make sure that the output is in SAM format using the

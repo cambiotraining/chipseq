@@ -411,7 +411,7 @@ summary {
 <p>To view if these files have been successfully created type:</p>
 <pre><code>ls -l bowtie_index</code></pre>
 <p>Now that the genome is indexed we can move on to the actual alignment. Align the Oct4 reads using <em>Bowtie2</em>:</p>
-<pre><code>bowtie2 -m 1 -S -p 6 bowtie_index/mm10 fastq/Oct4.fastq.gz &gt; Oct4.sam</code></pre>
+<pre><code>bowtie2 -p 6 -x bowtie_index/mm10 -U fastq/Oct4.fastq.gz -S Oct4.sam</code></pre>
 <p>The first two arguments make sure that the output is in SAM format using the <code>-S</code> parameter and that Bowtie2 reports only uniquely mapped reads using the <code>-m 1</code> option. The <code>-p 6</code> argument instructs <em>Bowtie2</em> to parallelize the alignement across 6 cores, this makes it considerably faster. The next argument is the basename of the index for the genome to be searched; in our case is <code>bowtie_index/mm10</code>. The final argument is the name of the fastq file.</p>
 <p>Note: while the command is running there is no indication in the terminal that anything is happening. You can use the command <code>htop</code> in another terminal window to check activity on the computer.</p>
 <p>The above command outputs the alignment in SAM format and stores them in the file <code>Oct4.sam</code>.</p>
