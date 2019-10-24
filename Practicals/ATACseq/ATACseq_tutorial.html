@@ -127,10 +127,13 @@ $(document).ready(function () {
 <div id="atacseq-practical" class="section level1">
 <h1>ATACseq practical</h1>
 <div id="denis-seyres-ds777medschl.cam.ac.uk" class="section level5">
+<h5>Sergio Martinez Cuesta <a href="mailto:sermarcue@gmail.com">sermarcue@gmail.com</a></h5>
+</div>
+<div id="denis-seyres-ds777medschl.cam.ac.uk" class="section level5">
 <h5>Denis Seyres <a href="mailto:ds777@medschl.cam.ac.uk">ds777@medschl.cam.ac.uk</a></h5>
 </div>
 <div id="rd-may-2019-cambridge-uk" class="section level5">
-<h5>3rd May 2019, Cambridge, UK</h5>
+<h5>24th October 2019, Cambridge, UK</h5>
 </div>
 <div id="resources-used" class="section level3">
 <h3>Resources used</h3>
@@ -349,7 +352,7 @@ write.table(genes, file = &quot;ATAC_R1_peak_to_genes.txt&quot;, sep = &quot;&qu
 <div id="identification-of-nucleosomes-positions" class="section level2">
 <h2>Identification of nucleosomes positions</h2>
 <p>The “bead” or nucleosome is the smallest packaging unit of the chromatin fiber and it consists of 147bp DNA wrapped 1.65 turns around a histone octamer core, consisting of two H2A/H2B and H3/H4 heterodimers(Luger et al., 1997). Nucleosomes are then further assembled into various higher order structures that can potentially be unwrapped as needed (for review see (Luger and Hansen, 2005)). Nucleosome “calling” or positionning analysis is the next level of analysis and will greatly help in accurate identification of nucleosome-depleted regions.</p>
-<p> The required files are: 1. BAM files filtered for low quality and duplicated reads 2. FASTA file of the genome (here we only use chromosome 2L sequence). It needs to be indexed (using <code>samtools faidx</code>) 3. Sorted BED file with regions for which nucleosome analysis is to be performed. It is potentially advisable to extend these regions a bit (e.g. using <code>bedtools slop</code>). Regions should not overlap so it is advisable to use <code>bedtools merge</code> on these regions.</p>
+<p> The required files are: 1. BAM files filtered for low quality and duplicated reads 2. FASTA file of the genome (here we only use chromosome 2L sequence). It needs to be indexed (using <code>samtools faidx</code>) 3. Sorted BED file with regions for which nucleosome analysis is to be performed. It is potentially advisable to extend these regions a bit (e.g. using <code>bedtools slop</code>). Regions should not overlap so it is advisable to use <code>bedtools merge</code> on these regions.</p>
 <p>Prepare the BED file</p>
 <pre class="ngs"><code>#Chromosome size can be retrieved by using the following command:
 mysql --user=genome --host=genome-mysql.cse.ucsc.edu -A -e &quot;select chrom,size from dm3.chromInfo&quot; &gt; dm3.genome
@@ -389,7 +392,7 @@ library(seqplots)
 run()</code></pre>
 <p>It opens a page in your web-browser.</p>
 <p>You need to upload files. Click on ‘Add files’ and ‘Add files…’. Select the ATACseq bigwig file and the different feature files (ATAC-seq peaks) Also add BAM files from Diffbind practical for H3K27ac. Select the right genome and ‘Start upload’.</p>
-<p>Close the window and click on ‘New plot set’. Under the tab ‘Tracks’ select all the bigwig files. Under the ‘Features’ track, select all the feature files. At the bottom of the page, select ‘Midpoint features’ in plot type (to center the signal on the feature, e.g. the ATACseq peaks). Then, ‘Run calculation’. Once finished, select the tracks you want to display in the table and click ‘Profile’ in the left panel.</p>
+<p>Close the window and click on ‘New plot set’. Under the tab ‘Tracks’ select all the bigwig files. Under the ‘Features’ track, select all the feature files. At the bottom of the page, select ‘Midpoint features’ in plot type (to center the signal on the feature, e.g. the ATACseq peaks). Then, ‘Run calculation’. Once finished, select the tracks you want to display in the table and click ‘Profile’ in the left panel.</p>
 
 </div>
 <div id="question" class="section level2">
@@ -453,7 +456,7 @@ dev.off()</code></pre>
 <div id="bonus-exercise-iii-compare-set-of-peaks" class="section level2">
 <h2>Bonus Exercise III: Compare set of peaks</h2>
 <p>You can now run comparisons within replicates and between <em>FSEQ</em> and <em>MACS2</em>. We will use intervene to summarize all comparisons. We will first draw a Venn diagram. When the number of sets exceeds three or four, Venn diagrams become difficult to read and interpret. An alternative and more effective approach is to use UpSet plots to visualize the intersections.</p>
-<pre class="ngs"><code>intervene venn --names=fseq_R1,fseq_R2,MACS2_R1,MACS2_R2 -i peakCalling/FSEQ/ATAC_R1_fseq.bed peakCalling/FSEQ/ATAC_R2_fseq.bed peakCalling/MACS2/ATAC_R1.bed peakCalling/MACS2/ATAC_R2.bed -o peakCalling 
+<pre class="ngs"><code>intervene venn --names=fseq_R1,fseq_R2,MACS2_R1,MACS2_R2 -i peakCalling/FSEQ/ATAC_R1_fseq.bed peakCalling/FSEQ/ATAC_R2_fseq.bed peakCalling/MACS2/ATAC_R1.bed peakCalling/MACS2/ATAC_R2.bed -o peakCalling
 
 intervene upset --names=fseq_R1,fseq_R2,MACS2_R1,MACS2_R2 -i peakCalling/FSEQ/ATAC_R1_fseq.bed peakCalling/FSEQ/ATAC_R2_fseq.bed peakCalling/MACS2/ATAC_R1.bed peakCalling/MACS2/ATAC_R2.bed -o peakCalling </code></pre>
 <p>CONGRATULATIONS! You’ve made it to the end of the bonus exercises.</p>
@@ -468,7 +471,6 @@ intervene upset --names=fseq_R1,fseq_R2,MACS2_R1,MACS2_R2 -i peakCalling/FSEQ/AT
 </div>
 
 <script>
-
 // add bootstrap table styles to pandoc tables
 function bootstrapStylePandocTables() {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
@@ -476,8 +478,6 @@ function bootstrapStylePandocTables() {
 $(document).ready(function () {
   bootstrapStylePandocTables();
 });
-
-
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
