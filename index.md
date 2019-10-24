@@ -62,7 +62,10 @@ chromatin.
 
 ## Source Materials for Practicals
 
-The all of the lecture slides and other materials can be found in the course's [Github 
+All of the lecture slides and other materials can be found in the course's [Github 
 repository](https://github.com/cambiotraining/chipseq)
+
+All of the data used for the practical sessions can be found at the following dropbox link:
+https://www.dropbox.com/sh/8qepkyeaxm86nrl/AAD7hDxiHO9uzDubC4QStZaUa?dl=0
 
 
