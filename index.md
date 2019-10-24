@@ -21,7 +21,7 @@ chromatin.
 ## Instructors
 
 * Sandra Cortijo - Locke Group, Sainsbury Laboratory, Cambridge University
-* Sergio Martinez Cuesta - , Cancer Research UK Cambridge Institute   
+* Sergio Martinez Cuesta - Balasubramanian Group, Cancer Research UK Cambridge Institute   
 * Sankari Nagarajan - Carroll Group, Cancer Research UK Cambridge Institute  
 * Ashley Sawle - Bioinformatics Core, Cancer Research UK Cambridge Institute 
 
