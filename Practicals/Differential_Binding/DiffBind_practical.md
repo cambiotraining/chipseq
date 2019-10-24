@@ -143,7 +143,7 @@ information about the samples to compare. We have prepared this file for you
 and you can view it by loading it in R.
 
 ```
-setwd("~/Desktop/Course_Materials/Practicals/DiffBind/bam") 
+setwd("~/Desktop/Course_Materials/Practicals/Differential_Binding/bam") 
 read_csv("H3K27ac_diffbind2.csv")
 ```
 
