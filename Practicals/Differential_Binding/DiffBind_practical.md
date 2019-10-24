@@ -144,7 +144,7 @@ and you can view it by loading it in R.
 
 ```
 setwd("~/Desktop/Course_Materials/Practicals/Differential_Binding/bam") 
-read_csv("H3K27ac_diffbind2.csv")
+read.csv("H3K27ac_diffbind2.csv")
 ```
 
 ### Questions
