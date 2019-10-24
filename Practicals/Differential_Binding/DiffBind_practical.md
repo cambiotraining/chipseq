@@ -261,7 +261,7 @@ dba.plotHeatmap(H3K27ac, contrast=1, correlations=FALSE)
 ### Questions: understanding DiffBind
 
 1. How many differential regions you obtained?  
-2. Is the normalisation appropriate for these samples?  
+2. Is the experimental design appropriate for differential binding analysis?
 3. Do the significantly differential regions show consistent differences
    between the two cell types?
 
