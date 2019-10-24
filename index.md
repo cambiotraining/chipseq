@@ -39,7 +39,7 @@ chromatin.
 ### Day 2 	
 
 09:30 - 10:00 	Lecture: [Recap and biological replicates](Lectures/IDR/20191024_recap_replicates.pdf)  
-10:00 - 11:00 	Practical: [Working with biological replicates](Practicals/Replicate_IDR.html)  
+10:00 - 11:00 	Practical: [Working with biological replicates](Practicals/IDR/Replicate_IDR.html)  
 11:00 - 11:15   Tea Break  
 11:15 - 11:45 	Lecture: [Differential binding analysis](Lectures/Differential_Binding/Differential_Binding.html)  
 11:45 - 13:00 	Practical: [Differential binding analysis](Practicals/Differential_Binding/DiffBind_practical.html)  
