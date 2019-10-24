@@ -29,8 +29,8 @@ chromatin.
 
 ### Day 1
 09:30 - 10:30 	Introduction to ChIP-seq, data analysis and QC metrics  
-	Lecture: [Introduction to high throughput sequencing](Lectures/HTS/HTSIntro.pdf)  
-	Lecture: [Sequencing data formats and Quality Control](Lectures/QC/QC_and_Formats.pdf)  
+> Lecture: [Introduction to high throughput sequencing](Lectures/HTS/HTSIntro.pdf)  
+> Lecture: [Sequencing data formats and Quality Control](Lectures/QC/QC_and_Formats.pdf)  
 10:30 - 12:30 	Practical: [Introduction to ChIP-seq, data analysis and QC metrics](Practicals/QC/quality-control.html)  
 12:30 - 13:30 	Lunch (not provided)  
 13:30 - 14:30 	Lecture: [ChIP-seq data analysis](Lectures/ChIPseq_Introduction/ChIP-seq_intro_slides.html)  
@@ -39,10 +39,10 @@ chromatin.
 ### Day 2 	
 
 09:30 - 10:00 	Lecture: [Recap and biological replicates](Lectures/IDR/20191024_recap_replicates.pdf)  
-10:00 - 11:15 	Practical: [Working with biological replicates](Practicals/Replicate_IDR.html)  
-11:15 - 11:30   Tea Break  
-11:30 - 12:00 	Lecture: [Differential binding analysis](Lectures/Differential_Binding/Differential_Binding.html)  
-12:00 - 13:00 	Practical: [Differential binding analysis](Practicals/Differential_Binding/DiffBind_practical.html)  
+10:00 - 11:00 	Practical: [Working with biological replicates](Practicals/Replicate_IDR.html)  
+11:00 - 11:15   Tea Break  
+11:15 - 11:45 	Lecture: [Differential binding analysis](Lectures/Differential_Binding/Differential_Binding.html)  
+11:45 - 13:00 	Practical: [Differential binding analysis](Practicals/Differential_Binding/DiffBind_practical.html)  
 13:00 - 14:00 	Lunch (not provided)  
 14:00 - 14:45 	Lecture: [Introduction to ATAC-seq data analysis](Lectures/ATAC/ATAC-seq.pdf)  
 14:45 - 15:00 	Tea/coffee break  
