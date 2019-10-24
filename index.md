@@ -45,6 +45,7 @@ chromatin.
 11:45 - 13:00 	Practical: [Differential binding analysis](Practicals/Differential_Binding/DiffBind_practical.html)  
 13:00 - 14:00 	Lunch (not provided)  
 14:00 - 14:45 	Lecture: [Introduction to ATAC-seq data analysis](Lectures/ATAC/ATAC-seq.pdf)  
+> [ATAC drawing](Lectures/ATAC/sandras_atac_drawing.svg)
 14:45 - 15:00 	Tea/coffee break  
 15:00 - 17:00 	Practical: [ATAC-seq data analysis ](Practicals/ATACseq/ATACseq_tutorial.html)  
 
