@@ -1,0 +1,259 @@
+---
+title: Differential Binding
+---
+
+
+::: {.callout-tip}
+#### Learning Objectives
+
+- Bulleted list of learning objectives
+:::
+
+
+## Setup
+
+```{r}
+# Setup ----
+
+# load packages
+library(rtracklayer) # for importing BED/GFF/etc.
+library(plyranges)   # for working with GenomicRanges
+library(DiffBind)    # for ChIP peak analysis
+library(ggplot2)
+```
+
+
+```{r}
+# read chromosomes
+chroms <- read.table("results/chipseq/genome/GRCh38.109.fasta.sizes",
+                     col.names = c("seqnames", "seqlengths"))
+
+# read DiffBind samplesheet
+samplesheet <- read.csv("diffbind_samplesheet.csv")
+```
+
+## Reading Peaks
+
+
+### BRD4
+
+Create DBA object:
+
+```{r}
+# create DBA object for BRD4 antibody
+brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ])
+
+# correlation plot using caller score
+plot(brd4_dba)
+
+# count reads overlapping peaks
+brd4_dba <- dba.count(brd4_dba)
+
+# correlation plot based on raw counts
+plot(brd4_dba)
+
+# normalise
+brd4_dba <- dba.normalize(brd4_dba)
+
+plot(brd4_dba)
+
+# set contrast 
+# note minMembers is 3 by default
+brd4_dba <- dba.contrast(brd4_dba, 
+                         reorderMeta = list(Treatment = "veh"))
+
+# run the analysis
+brd4_dba <- dba.analyze(brd4_dba, bBlacklist = FALSE, bGreylist = FALSE)
+plot(brd4_dba)
+plot(brd4_dba, contrast = 1)
+
+# extract diffbound sites
+brd4_diffbound <- dba.report(brd4_dba, th = 1)
+
+# summarise
+brd4_diffbound |> 
+  filter(FDR < 0.05) |> 
+  summarise(up = sum(Fold > 0), down = sum(Fold < 0))
+
+# Don't think we need this - table above is sufficient
+dba.plotVenn(brd4_dba, contrast = 1, bDB = TRUE, bGain = TRUE, bLoss = TRUE, bAll = FALSE)
+
+dba.plotPCA(brd4_dba, label = DBA_REPLICATE)
+dba.plotPCA(brd4_dba, contrast = 1, label = DBA_REPLICATE)
+
+dba.plotMA(brd4_dba)
+brd4_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Conc, Fold)) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(y = sig), colour = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(method = "loess", colour = "red", se = FALSE)
+  
+dba.plotVolcano(brd4_dba)
+brd4_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Fold, -log10(FDR))) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(x = sig), colour = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed")
+  
+dba.plotBox(brd4_dba)
+
+dba.plotHeatmap(brd4_dba, contrast = 1, correlations = FALSE, scale = "row")
+
+profiles <- dba.plotProfile(brd4_dba, 
+                            sites = brd4_diffbound[sample(1:length(brd4_diffbound), 100), ])
+dba.plotProfile(profiles)
+```
+
+The full pipeline can be strung together using `|>` pipes:
+
+```{r}
+# full pipeline
+brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ]) |> 
+  # dba.blacklist(blacklist = FALSE, greylist = Seqinfo(seqnames = chroms$seqnames,
+  #                                                     seqlengths = chroms$seqlengths)) |> 
+  dba.count() |> 
+  dba.normalize() |> 
+  dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
+  dba.analyze(bBlacklist = FALSE, bGreylist = FALSE)
+
+# extract diffbound sites
+brd4_diffbound <- dba.report(brd4_dba, th = 1)
+```
+
+Analyse results
+
+```{r}
+# summarise
+brd4_diffbound |> 
+  filter(FDR < 0.05) |> 
+  summarise(up = sum(Fold > 0), down = sum(Fold < 0))
+
+# Don't think we need this - table above is sufficient
+dba.plotVenn(brd4_dba, contrast = 1, bDB = TRUE, bGain = TRUE, bLoss = TRUE, bAll = FALSE)
+
+dba.plotPCA(brd4_dba, label = DBA_REPLICATE)
+dba.plotPCA(brd4_dba, contrast = 1, label = DBA_REPLICATE)
+
+dba.plotMA(brd4_dba)
+brd4_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Conc, Fold)) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(y = sig), colour = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(method = "loess", colour = "red", se = FALSE)
+
+dba.plotVolcano(brd4_dba)
+brd4_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Fold, -log10(FDR))) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(x = sig), colour = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed")
+  
+dba.plotBox(brd4_dba)
+
+dba.plotHeatmap(brd4_dba, contrast = 1, correlations = FALSE, scale = "row")
+
+profiles <- dba.plotProfile(brd4_dba, 
+                            sites = brd4_diffbound |> filter(FDR < 0.01 & abs(Fold > 4)))
+dba.plotProfile(profiles)
+
+brd4_diffbound |> 
+  filter(FDR < 0.05) |> 
+  seqnames() |> 
+  table()
+
+```
+
+
+### H2Bub1
+
+The other antibody H2Bub1:
+
+```{r}
+# full pipeline
+h2bub1_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "H2Bub1", ]) |> 
+  dba.count() |> 
+  dba.normalize() |> 
+  dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
+  dba.analyze(bBlacklist = FALSE, bGreylist = FALSE)
+  
+h2bub1_diffbound <- dba.report(h2bub1_dba, th = 1)
+```
+
+Looking at results:
+
+```{r}
+# summarise
+h2bub1_diffbound |> 
+  filter(FDR < 0.05) |> 
+  summarise(up = sum(Fold > 0), down = sum(Fold < 0))
+
+# Don't think we need this - table above is sufficient
+dba.plotVenn(h2bub1_dba, contrast = 1, bDB = TRUE, bGain = TRUE, bLoss = TRUE, bAll = FALSE)
+
+dba.plotPCA(h2bub1_dba, label = DBA_REPLICATE)
+dba.plotPCA(h2bub1_dba, contrast = 1, label = DBA_REPLICATE)
+
+dba.plotMA(h2bub1_dba)
+h2bub1_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Conc, Fold)) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(y = sig), colour = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_smooth(method = "loess", colour = "red", se = FALSE)
+
+dba.plotVolcano(h2bub1_dba)
+h2bub1_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Fold, -log10(FDR))) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(x = sig), colour = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed")
+
+dba.plotBox(h2bub1_dba)
+
+dba.plotHeatmap(h2bub1_dba, contrast = 1, correlations = FALSE, scale = "row")
+
+profiles <- dba.plotProfile(h2bub1_dba, 
+                            sites = h2bub1_diffbound |> filter(FDR < 0.01 & abs(Fold > 4)))
+dba.plotProfile(profiles)
+```
+
+
+## Annotate Results
+
+Find the closest genes to each of these peaks
+
+```{r}
+# import gene annotations
+genes <- import("resources/GRCh38.109.gff.gz")
+
+genes |> 
+  group_by(type) |> 
+  summarise(n()) |> as.data.frame() |> 
+  View()
+
+brd4_diffbound |> 
+  filter(FDR < 0.05) |> 
+  join_nearest(genes)
+```
+
+## Summary
+
+::: {.callout-tip}
+#### Key Points
+
+- Last section of the page is a bulleted summary of the key points
+:::
