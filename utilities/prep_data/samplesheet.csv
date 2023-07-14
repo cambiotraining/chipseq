@@ -1,0 +1,21 @@
+sample,fastq_1,fastq_2,antibody,control,geo_accession,run,instrument,organism,cell_type
+brd4_veh_rep1,data/reads/SRR1193526.fastq.gz,,BRD4,mcf7_input_veh,GSM1348515,SRR1193526,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+brd4_veh_rep2,data/reads/SRR1193527.fastq.gz,,BRD4,mcf7_input_veh,GSM1348516,SRR1193527,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+brd4_veh_rep3,data/reads/SRR1193528.fastq.gz,,BRD4,mcf7_input_veh,GSM1348517,SRR1193528,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+brd4_e2_rep1,data/reads/SRR1193529.fastq.gz,,BRD4,mcf7_input_e2,GSM1348518,SRR1193529,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+brd4_e2_rep2,data/reads/SRR1193530.fastq.gz,,BRD4,mcf7_input_e2,GSM1348519,SRR1193530,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+brd4_e2_rep3,data/reads/SRR1193531.fastq.gz,,BRD4,mcf7_input_e2,GSM1348520,SRR1193531,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_veh_rep1,data/reads/SRR1193538.fastq.gz,,H2Bub1,mcf7_input_veh,GSM1348527,SRR1193538,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_veh_rep1,data/reads/SRR1193539.fastq.gz,,H2Bub1,mcf7_input_veh,GSM1348527,SRR1193539,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_veh_rep2,data/reads/SRR1193540.fastq.gz,,H2Bub1,mcf7_input_veh,GSM1348528,SRR1193540,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_veh_rep2,data/reads/SRR1193541.fastq.gz,,H2Bub1,mcf7_input_veh,GSM1348528,SRR1193541,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_veh_rep3,data/reads/SRR1193542.fastq.gz,,H2Bub1,mcf7_input_veh,GSM1348529,SRR1193542,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_veh_rep3,data/reads/SRR1193543.fastq.gz,,H2Bub1,mcf7_input_veh,GSM1348529,SRR1193543,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_e2_rep1,data/reads/SRR1193550.fastq.gz,,H2Bub1,mcf7_input_e2,GSM1348533,SRR1193550,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_e2_rep1,data/reads/SRR1193551.fastq.gz,,H2Bub1,mcf7_input_e2,GSM1348533,SRR1193551,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_e2_rep2,data/reads/SRR1193552.fastq.gz,,H2Bub1,mcf7_input_e2,GSM1348534,SRR1193552,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_e2_rep2,data/reads/SRR1193553.fastq.gz,,H2Bub1,mcf7_input_e2,GSM1348534,SRR1193553,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_e2_rep3,data/reads/SRR1193554.fastq.gz,,H2Bub1,mcf7_input_e2,GSM1348535,SRR1193554,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+h2bub1_e2_rep3,data/reads/SRR1193555.fastq.gz,,H2Bub1,mcf7_input_e2,GSM1348535,SRR1193555,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+mcf7_input_veh,data/reads/SRR1193562.fastq.gz,,,,GSM1348539,SRR1193562,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
+mcf7_input_e2,data/reads/SRR1193563.fastq.gz,,,,GSM1348540,SRR1193563,Illumina HiSeq 2500,Homo sapiens,MCF7 breast cancer cells
