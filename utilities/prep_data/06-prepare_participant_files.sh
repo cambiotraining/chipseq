@@ -35,12 +35,12 @@ zcat utilities/prep_data/resources/GRCh38.109.fasta.gz |\
   gzip > course_files/participants/resources/GRCh38.109.chr21.fasta.gz
 
 # subset annotation to include chromosome 21 only
-zcat utilities/prep_data/resources/GRCh38.109.gff.gz |\
-  grep -P "^(##gff|##sequence-region\s+21\s+1|21)\b" |\
-  gzip > course_files/participants/resources/GRCh38.109.chr21.gff.gz
+zcat utilities/prep_data/resources/GRCh38.109.gtf.gz |\
+  grep -P "^(#!|21)\b" |\
+  gzip > course_files/participants/resources/GRCh38.109.chr21.gtf.gz
 
 # full annotation as well for annotating peaks
-cp utilities/prep_data/resources/GRCh38.109.gff.gz course_files/participants/resources/GRCh38.109.gff.gz
+cp utilities/prep_data/resources/GRCh38.109.gtf.gz course_files/participants/resources/GRCh38.109.gtf.gz
 
 # subset exclusion lists to include chrom 21 only
 zcat utilities/prep_data/resources/ENCFF356LFX_exclusion_lists.bed.gz |\
