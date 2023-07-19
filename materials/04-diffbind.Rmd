@@ -1,0 +1,432 @@
+---
+title: Differential binding
+knitr:
+  opts_chunk: 
+    purl: true
+    cache: true
+  opts_knit:
+    root.dir: "../course_files/participants/"
+---
+
+```{r setup, echo=FALSE, purl=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache = TRUE, 
+                      cache.path = "../_cache/",
+                      warning = FALSE, 
+                      message = FALSE, 
+                      cache.lazy = FALSE,
+                      purl = TRUE)
+knitr::opts_knit$set(root.dir = "../course_files/participants/")
+```
+
+```{r, eval=FALSE, echo=FALSE, purl=FALSE}
+# note to trainers
+# to generate script for participants run from the parent directory: 
+knitr::purl("materials/04-diffbind.Rmd", 
+            "course_files/participants/scripts/04-diffbind.R", 
+            documentation = 0)
+```
+
+
+::: {.callout-tip}
+#### Learning Objectives
+
+- Bulleted list of learning objectives
+:::
+
+
+## Differential binding
+
+When multiple conditions are available in our ChIP design (e.g. healthy vs disease, wild-type vs mutant, treated vs control, different cell types, ...), we may want to investigate whether certain peaks are differentially bound between them. 
+
+Finding differentially bound regions in the genome is analogous to identifying differentially expressed genes in RNA-seq data. 
+In both cases we are dealing with count data summarised over features (genes/transcripts in the case of RNA-seq and peaks in the case of ChIP-seq). 
+In both cases the biological replicates show larger variability than technical replicates, and the negative binomial model is suitable to compare binding affinities accross samples. 
+
+There are a number of differential expression packages in R that use the negative binomial model e.g. `DESeq2` and `edgeR`. 
+These methods are wrapped in the `DiffBind` package that is geared towards analysing differential binding in ChIP-seq data and provides a number of analytical plots as well.
+
+As usual, we start by loading our packages:
+
+```{r packages}
+# Packages ----
+
+# load packages
+library(rtracklayer) # for importing BED/GFF/etc.
+library(plyranges)   # for working with GenomicRanges
+library(ChIPseeker)  # to annotate peaks
+library(profileplyr) # for profile heatmaps
+library(DiffBind)    # for ChIP peak analysis
+library(ggplot2)
+
+# change the default ggplot theme
+theme_set(theme_classic(base_size = 14))
+```
+
+
+## Reading peaks
+
+As is common with Bioconductor packages, the `DiffBind` package uses its own data structure, called a `dba` object. 
+To create this, we need to create a CSV file with the following information: 
+
+- TODO long list of columns
+
+We've already created this for you, so all we need to do is read it in: 
+
+```{r read_samplesheet}
+# read DiffBind samplesheet
+samplesheet <- read.csv("diffbind_samplesheet.csv")
+
+head(samplesheet)
+```
+
+Once we have this samplesheet, creating the `dba` object is relatively simple (note in this case we're only loading the BRD4 samples): 
+
+```{r read_dba}
+# create DBA object for BRD4 antibody
+brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ])
+
+brd4_dba
+```
+
+Without doing any further analysis, we can already produce a correlation heatmap using the `plot()` function:
+
+```{r plot_raw}
+# correlation plot using caller score
+plot(brd4_dba)
+```
+
+This correlation is calculated based on the score given to each peak, in our case the score that MACS assigns to each called peak. 
+This is not necessarily the best way to look at the correlation between samples, as it doesn't take into account the actual counts in each peak (that will come later), but it's a good starting point to look at the correlation between our samples. 
+
+In our case, we can see that our replicates are not clustering per treatment, suggesting other effects may have played a role in the ChIP profiles. 
+
+The next step is to count reads in each peak (which is the raw data that will be used to estimate the differential binding). 
+This step takes a long time, so be prepared to wait if you're running this on your data. 
+
+```{r count}
+# count reads overlapping peaks 
+# this takes a long time to run! So we load pre-computed one
+# brd4_dba <- dba.count(brd4_dba)
+brd4_dba <- readRDS("preprocessed/r_objects/brd4_dba.count.rds")
+
+# correlation plot based on raw counts
+plot(brd4_dba)
+```
+
+Now, when we call the `plot()` function the correlation heatmap is instead done from the counts assigned to each peak (rather than peak scores). 
+In this case, we get a clearer clustering of samples by treatment, which is a good sign!
+
+The next step in the analysis is to normalise the counts. 
+There are different methods to normalise the counts, and this is discussed at length by the DiffBind authors (see section 7 in the [documentation](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf)). 
+In summary, these authors argue for caution when applying normalisation methods used for RNA-seq analysis, as those methods assume that most features (peaks in our case, genes in the RNA-seq case) are _not_ differentially expressed/bound between conditions. 
+However, this assumption may not make biological sense in the case of ChIP-seq, as some conditions may dramatically affect the binding profiles genome-wide. 
+
+This may certainly be the case for BRD4, as we've seen from our profile plots that binding is generally higher for E2-treated samples compared to controls. 
+For this reason, the default normalisation method used by `DiffBind` is a simple library size normalisation, which we apply below. 
+
+```{r normalise}
+# normalise counts by library size (default)
+brd4_dba <- dba.normalize(brd4_dba, normalize = DBA_NORM_LIB)
+```
+
+One final step before we fit the model that will test for differential binding, is to set the "contrast" of our experiment. 
+This is where we can set which factors should be taken into account when modelling the counts and which comparisons we want to make. 
+There is quite a lot of flexibility in setting these models, which is detailed in the [package's documentation](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf) as well as [the documentation for `DEseq2`](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html), which is used behind the scenes. 
+
+In our case, we only have one factor (treatment) with two conditions ("e2" and "veh"). 
+Therefore, we can set our contrast like so: 
+
+```{r contrast}
+# set contrast 
+brd4_dba <- dba.contrast(brd4_dba, 
+                         design = ~ Treatment,
+                         reorderMeta = list(Treatment = "veh"),
+                         minMembers = 3)
+```
+
+Where: 
+
+- `design` uses R's standard model formula syntax to define the variables used to model our counts, in our case "Treatment" (this is one of the columns from our CSV samplesheet). 
+- `reorderMeta` is used to set the reference level for our Treatment variable; in our case it makes sense to set "veh" as the reference level (control). The default reference level would be whichever comes first alphabetically. 
+- `minMembers` defines the minimum number of replicates required to run the analysis. The default value is in fact 3, but we've set it anyway to be explicit. 
+
+Finally, we can fit the statical model using `DEseq2`'s statistical machinery (the other option is to use `DBA_EDGER`, which would use that package instead - the results are very comparable). 
+
+```{r analysis}
+# run the analysis
+brd4_dba <- dba.analyze(brd4_dba, 
+                        method = DBA_DESEQ2,
+                        bBlacklist = FALSE, 
+                        bGreylist = FALSE)
+```
+
+Note that we've set two options to `FALSE`: 
+
+- `bBlacklist` turns off the behaviour of trying to identify our genome and apply an exclusion list to it. 
+  We've already done this when we did peak calling with the `nf-core/chipseq` workflow, so there is no need to do this again. 
+- `bGreylist` turns off the behaviour of estimating a so-called "greylist". 
+  We talk more about this below. 
+  
+Finally, with the analysis done, it's time to extract our results, which are returned as a familiar `GRanges` object: 
+
+```{r report}
+# extract diffbound sites
+# keep all peaks, even those that are non-significant
+brd4_diffbound <- dba.report(brd4_dba, th = 1)
+
+brd4_diffbound
+```
+
+We can use some `plyranges` syntax to obtain a summary of how many peaks are differentially bound and in which direction:
+
+```{r count_diffbound}
+# count how many up or down
+brd4_diffbound |> 
+  filter(FDR < 0.05) |> 
+  summarise(up = sum(Fold > 0), down = sum(Fold < 0))
+```
+
+The result is not particularly striking. 
+It suggests that not many peaks are differentially bound between conditions. 
+Let's investigate our results a bit further with some visualisations. 
+
+
+## Differential binding visualisation 
+
+```{r header, echo=FALSE}
+# Visualisation ----
+```
+
+The `DiffBind` package provides several plotting functions, illustrated below. 
+
+We start with a PCA, which shows that samples separate by treatment along PC2, but not PC1 (the axis of greatest variance). 
+This suggests that factors other than the treatment influenced our ChIP results. 
+This may explain the relatively low number of differentially bound peaks. 
+
+```{r plot_pca}
+# PCA plot
+dba.plotPCA(brd4_dba, label = DBA_REPLICATE)
+```
+
+Another common visualisation used in differential analysis is the MA plot.
+This shows the average normalised read counts on the X-axis and the log-fold change on the Y-axis. 
+This plot can be used to assess the effect of the normalisation on the data (red trend line, which we want to be close to the zero horizontal line) as well as highlighting the significant differentially bound regions (pink points).
+
+```{r plot_ma}
+# MA plot
+dba.plotMA(brd4_dba)
+```
+
+You can also generate this plot with `ggplot2`, if you want to customise it further:
+
+```{r, eval=FALSE}
+# can also do it with ggplot2
+brd4_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Conc, Fold)) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(y = sig), colour = "black") +
+  geom_hline(yintercept = 0, linetype = "dashed")
+```
+
+Another common visualisation is a volcano plot, which shows the log-fold change on the x-axis and p-values on the y-axis (we don't show this one, to save space). 
+
+```{r plot_volcano, eval=FALSE}
+# volcano plot
+dba.plotVolcano(brd4_dba)
+
+# can also do it with ggplot2
+brd4_diffbound |> 
+  as.data.frame() |> 
+  mutate(sig = ifelse(FDR < 0.05, Fold, NA)) |> 
+  ggplot(aes(Fold, -log10(FDR))) + 
+  geom_point(colour = "grey") + 
+  geom_point(aes(x = sig), colour = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed")
+```
+
+We can also produce a boxplot of normalised counts, which shows the distribution of counts in the whole dataset, and on the subset of peaks with significant differential binding (both upwards and downwards). 
+
+```{r boxplot}
+# boxplot of normalised counts
+dba.plotBox(brd4_dba)
+```
+
+In our case, this boxplot is interesting, as it illustrates that, overall, BRD4 in E2-treated cells seems to have higher binding affinity than in control cells. 
+This might either be biologically reasonable, or it may be an issue with data quality (recall the variation in FRiP scores we've seen earlier and the fact that the PCA separates samples from different treatments along PC1). 
+As we are not experts in this biological system, we refrain from making further comments on this. 
+
+Finally, we can visualise the scaled counts in the differentially bound peaks as a heatmap: 
+
+```{r heatmap}
+# heatmap of DB peaks
+dba.plotHeatmap(brd4_dba, contrast = 1, 
+                correlations = FALSE, scale = "row")
+```
+
+## Pipeline
+
+```{r pipeline_header, echo=FALSE}
+
+# Pipes ----
+```
+
+Although we've broken our analysis down into individual steps, it's worth nothing that because each function of the `DiffBind` workflow always returns the `dba` object with further elements added to it, we can put it all together using `|>` pipes:
+
+```{r, eval=FALSE}
+# full pipeline - do not run, it will take too long!
+brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ]) |> 
+  dba.count() |> 
+  dba.normalize(normalize = DBA_NORM_LIB) |> 
+  dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
+  dba.analyze(method = DBA_DESEQ2,
+              bBlacklist = FALSE, 
+              bGreylist = FALSE)
+
+# extract diffbound sites
+brd4_diffbound <- dba.report(brd4_dba, th = 1)
+```
+
+
+:::{.callout-exercise}
+
+```{r ex_header, echo=FALSE}
+
+# Exercise ----
+```
+
+Run the differential binding analysis for the H2Bub1 ChIP.
+Because counting reads assigned to each peak takes too long to run, we start by loading a pre-processed file.
+
+Starting from this object, build a pipeline to run the rest of the steps in the analysis.
+We already provide a code skeleton for you to do this, with some "FIXME" for you to correct. 
+
+<details><summary>Code skeleton</summary>
+
+Note, this code is provided in the accompanying course materials script. 
+It's only shown here for reference. 
+
+```{r ex_h2bub1, eval=FALSE}
+# run diffbind analysis
+h2bub1_dba <- readRDS("preprocessed/r_objects/h2bub1_dba.count.rds") |> 
+  FIXME
+  
+# extract results as a GRanges object
+brd4_diffbound <- FIXME 
+
+# correlation heatmap for the samples
+FIXME
+
+# PCA plot
+FIXME
+
+# MA plot
+FIXME 
+
+# boxplot
+FIXME
+
+# heatmap of differentially bound peaks
+FIXME
+```
+
+</details>
+
+:::{.callout-answer collapse=true}
+
+The full pipeline is shown here (but we don't run all of it, as it would take too long):
+
+```{r ex_answer_part1, eval=FALSE, purl=FALSE}
+# full pipeline
+h2bub1_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "H2Bub1", ]) |> 
+  dba.count() |> 
+  dba.normalize() |> 
+  dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
+  dba.analyze(bBlacklist = FALSE, bGreylist = FALSE)
+```
+
+For the practical, we start from the pre-processed counts: 
+
+```{r ex_answer_part2, purl=FALSE}
+# start from pre-processed counts
+h2bub1_dba <- readRDS("preprocessed/r_objects/h2bub1_dba.count.rds") |> 
+  dba.normalize() |> 
+  dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
+  dba.analyze(bBlacklist = FALSE, bGreylist = FALSE)
+
+# run the differential binding analysis
+h2bub1_diffbound <- dba.report(h2bub1_dba, th = 1)
+```
+
+We can then explore our results:
+
+```{r ex_answer_part3, purl=FALSE}
+# summarise
+h2bub1_diffbound |> 
+  filter(FDR < 0.05) |> 
+  summarise(up = sum(Fold > 0), down = sum(Fold < 0))
+  
+# correlation heatmap for the samples
+plot(h2bub1_dba)
+
+# PCA plot
+dba.plotPCA(h2bub1_dba)
+
+# MA plot
+dba.plotMA(h2bub1_dba)
+
+# boxplot
+dba.plotBox(h2bub1_dba)
+
+# heatmap of differentially bound peaks
+dba.plotHeatmap(h2bub1_dba, contrast = 1, correlations = FALSE, scale = "row")
+```
+
+In this case there are more differentially bound peaks, and the boxplot of normalised counts between conditions is much closer between groups (although still different, which again might make biological sense). 
+:::
+:::
+
+
+## Annotate peaks
+
+As we did before, we can annotate our differentially bound peaks using `ChIPseeker`:
+
+```{r annotate_peaks, eval=FALSE, purl=FALSE}
+# import gene annotation as a transcript database
+genes <- GenomicFeatures::makeTxDbFromGFF("resources/GRCh38.109.gtf.gz")
+
+# annotate
+brd4_diffbound <- annotatePeak(brd4_diffbound, 
+                               tssRegion = c(-3e3, 3e3),
+                               TxDb = genes) |> 
+  as.GRanges()
+```
+
+
+## Bonus: greylists
+
+TODO
+
+```{r, eval=FALSE, echo=FALSE, purl=FALSE}
+# read chromosomes
+chroms <- read.table("results/chipseq/genome/GRCh38.109.fasta.sizes",
+                     col.names = c("seqnames", "seqlengths"))
+
+brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ]) |> 
+  dba.blacklist(blacklist = FALSE, greylist = Seqinfo(seqnames = chroms$seqnames,
+                                                      seqlengths = chroms$seqlengths)) |> 
+  dba.count() |> 
+  dba.normalize() |> 
+  dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
+  dba.analyze(bBlacklist = FALSE, bGreylist = FALSE)
+``` 
+
+
+## Summary
+
+::: {.callout-tip}
+#### Key Points
+
+- Last section of the page is a bulleted summary of the key points
+:::

@@ -2,4 +2,7 @@ book:
   chapters:
     - part: "Developer Guidelines"
       chapters:
-        - materials/00-template.md
+        - materials/01-peak_calling.md
+        - materials/02-peak_ranges.Rmd
+        - materials/03-profile_heatmaps.Rmd
+        - materials/04-diffbind.Rmd
