@@ -146,10 +146,10 @@ For example, you can look at genes/regions where you expect binding to occur for
 ![TODO: IGV snapshot]()
 
 
-## Exercise
+## Exercises
 
-:::{.callout-exercise}
-# Running `nf-core/chipseq`
+:::{.callout-note}
+#### Running `nf-core/chipseq`
 
 - Fix the `samplesheet.csv` file where the word "FIXME" appears.
 - Fix the script `scripts/01-chipseq_workflow.sh` where the word "FIXME" appears. Output the results to a directory called `results/nf-chipseq`.
@@ -159,6 +159,7 @@ For example, you can look at genes/regions where you expect binding to occur for
 
 :::{.callout-answer collapse=true}
 
+TODO
 
 :::
 
@@ -166,7 +167,7 @@ For example, you can look at genes/regions where you expect binding to occur for
 
 
 :::{.callout-exercise}
-# MultiQC report
+#### MultiQC report
 
 We've already processed the full dataset through the `nf-core/chipseq` workflow. 
 The full data includes 14 samples: 
