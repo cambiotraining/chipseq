@@ -20,7 +20,11 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: 1.2.112
+          packages:
+            any::knitr
+            any::rmarkdown
+            any::downlit
+            any::xml2
 
       - name: Render Site
         uses: quarto-dev/quarto-actions/render@v2
