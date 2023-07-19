@@ -16,7 +16,7 @@ project:
 format: courseformat-html
 
 execute:
-  freeze: true
+  freeze: auto
 
 knitr:
   opts_knit:
