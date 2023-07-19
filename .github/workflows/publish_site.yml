@@ -20,11 +20,16 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
+      - name: Install R
+        uses: r-lib/actions/setup-r@v2
+
       - name: R dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
-        with:
+        with: 
           packages:
             any::rmarkdown
+            any::knitr
+            any::jsonlite
 
       - name: Render Site
         uses: quarto-dev/quarto-actions/render@v2
