@@ -266,11 +266,20 @@ Based on the code we showed above, generate a profile heatmap for the H2Bub1 ChI
 
 Does the result match your expectation from previous analysis?
 
-```{r ex1_h2bub1_prof, echo=FALSE}
+```{r ex1_h2bub1_prof, eval=FALSE, echo=FALSE}
 
 # Exercise ----
 
-# Generate a profile heatmap for the H2Bub1 ChIP.
+# Generate a profile heatmap for the H2Bub1 ChIP
+
+# !!!FIX!!! import the deeptools matrix preprocessed/deeptools/h2bub1.log2.chr21.mat.gz
+h2bub1_prof <- FIXME
+
+# Sample 200 random peaks
+random_peaks <- sample(1:nrow(h2bub1_prof), 200)
+
+# !!!FIX!!! Visualise them
+FIXME
 ```
 
 :::{.callout-answer collapse=true}
@@ -281,7 +290,7 @@ Here is the code to import and generate a PNG file with our heatmap:
 # import the pre-computed matrix from deeptools
 h2bub1_prof <- import_deepToolsMat("preprocessed/deeptools/h2bub1.log2.chr21.mat.gz")
 
-# save plot as PGN
+# save plot as PNG
 png("results/h2bub1_heatmap.png", width = 3000, height = 1500, res = 300)
 generateEnrichedHeatmap(h2bub1_prof, include_group_annotation = FALSE)
 dev.off()

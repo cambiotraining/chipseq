@@ -308,26 +308,26 @@ Note, this code is provided in the accompanying course materials script.
 It's only shown here for reference. 
 
 ```{r ex_h2bub1, eval=FALSE}
-# run diffbind analysis
+# !!!FIX!!! run diffbind analysis
 h2bub1_dba <- readRDS("preprocessed/r_objects/h2bub1_dba.count.rds") |> 
   FIXME
   
-# extract results as a GRanges object
+# !!!FIX!!! extract results as a GRanges object
 brd4_diffbound <- FIXME 
 
-# correlation heatmap for the samples
+# !!!FIX!!! correlation heatmap for the samples
 FIXME
 
-# PCA plot
+# !!!FIX!!! PCA plot
 FIXME
 
-# MA plot
+# !!!FIX!!! MA plot
 FIXME 
 
-# boxplot
+# !!!FIX!!! boxplot
 FIXME
 
-# heatmap of differentially bound peaks
+# !!!FIX!!! heatmap of differentially bound peaks
 FIXME
 ```
 
