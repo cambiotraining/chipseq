@@ -1,0 +1,303 @@
+---
+title: Profile heatmaps
+---
+
+```{r setup, echo=FALSE, purl=FALSE, cache=FALSE}
+knitr::opts_chunk$set(cache = TRUE, 
+                      cache.path = "../_cache/",
+                      warning = FALSE, 
+                      message = FALSE, 
+                      cache.lazy = FALSE,
+                      purl = TRUE)
+knitr::opts_knit$set(root.dir = "../course_files/participants/")
+```
+
+```{r purl, eval=FALSE, echo=FALSE, purl=FALSE}
+# note to trainers
+# to generate script for participants run from the parent directory: 
+knitr::purl("materials/03-profile_heatmaps.Rmd", 
+            "course_files/participants/scripts/03-profile_heatmaps.R", 
+            documentation = 0)
+```
+
+
+::: {.callout-tip}
+#### Learning Objectives
+
+- Visualise peak profiles as a heatmap.
+
+:::
+
+## Profile heatmaps
+
+Before we visualise our data as heatmaps, we need to generate a matrix of binned counts for every peak and around annotations of interest (usually genes). 
+This is a computationally-intense step, so for "real" analysis be sure to run this on a high-performance workstation or cluster (and be ready to wait for a while).
+
+The binned counts matrix can be calculated using the `deeptools` suite. 
+There are a couple of steps involved: 
+
+- Scale the counts of each sample by the respective input controls. 
+  These are usually expressed as a ratio of counts on a log scale: log2(sample/input). 
+- Generate a matrix of binned (scaled) counts around known genes. 
+
+The first step is achieved using the `bamCompare` (part of `deeptools`). 
+Here is how we would generate these counts for one of our samples: 
+
+```bash
+bamCompare \
+  -b1 results/nf-chipseq/bwa/mergedLibrary/brd4_e2_rep1.mLb.clN.sorted.bam \
+  -b2 results/nf-chipseq/bwa/mergedLibrary/mcf7_input_e2.mLb.clN.sorted.bam \
+  -o results/deeptools/brd4_e2_rep1.log2.bigwig \
+  --binSize 20 \
+  --smoothLength 60 \
+  -p 8
+```
+
+Here, we have: 
+
+- `-b1` is the BAM file for our sample;
+- `-b2` is the BAM file for our input control;
+- `-o` is the output file (in bigwig format);
+- `--binSize` is the size of the bin (in bp) that we want to summarise the data by (default is 10). 
+  The larger this number, the "coarser" the output will be, but it will also run faster and produce smaller files. 
+- `--smoothLength` will smooth the signal by taking into account the signal of neighbouring regions. 
+  This is useful for visualisation.
+- `-p` is the number of processors (CPUs) we want to use to run the analysis in parallel. 
+  As mentioned earlier, these are a computationally intensive steps, so using more processors can help speed things up.
+
+This analysis would have to be done for every single sample, so you may want to use some programmatic tricks to automate things (see tip box below). 
+
+
+:::{.callout-note collapse=true}
+#### Looping samples through `bamCompare`
+
+One way to run `bamCompare` across all our samples in an automated way is to use a "[for loop](https://cambiotraining.github.io/unix-shell/materials/02-programming/03-loops.html)"
+Below is some code to illustrate this. 
+
+We take advantage that our files are named consistently to generate our `for` loop. 
+In the following example we loop through the E2-treated samples (you would have to write another similar loop for the vehicle samples, as they have a different input control).
+
+```bash
+for file in results/nf-chipseq/bwa/mergedLibrary/*_e2_*.bam
+do 
+  # get the prefix from the BAM filename to generate output file
+  prefix=$(basename $file .mLb.clN.sorted.bam)
+
+  # print a message to the screen to keep track of things
+  echo "bamCompare on ${file}"
+
+  # run bamCompare
+  bamCompare \
+    -b1 $file \
+    -b2 results/nf-chipseq/bwa/mergedLibrary/mcf7_input_e2.mLb.clN.sorted.bam \
+    -o results/deeptools/${prefix}.log2.bigwig \
+    --binSize 20 \
+    --smoothLength 60 \
+    -p 8
+done
+```
+
+:::
+
+
+### `computeMatrix`
+
+The next step of our analysis is to create a matrix of binned counts for each peak and gene annotation. 
+This is done using the `computeMatrix` tool from `deeptools`.
+
+There are two "modes" in which this tool can compute these counts: `reference-point` and `scale-regions`. 
+The difference between these is well illustrated in the [documentation](https://deeptools.readthedocs.io/en/latest/content/tools/computeMatrix.html).
+
+![Difference between the two modes for `computeMatrix`. Image source: [deeptools documentation](https://deeptools.readthedocs.io/en/latest/content/tools/computeMatrix.html).](https://deeptools.readthedocs.io/en/latest/_images/computeMatrix_modes.png)
+
+When to use one or the other depends on the type of protein being assessed. 
+For transcription factors, which typically bind to gene promoters, the `reference-point` mode probably makes sense, as it will show the signal around the TSS. 
+For proteins with broader signals, or that cover gene bodies (like our H2Bub1), the `scale-regions` might make more sense instead. 
+
+Here is some the code we used to generate this matrix, using as input the scaled bigwig files from `bamCompare`:
+
+```bash
+computeMatrix scale-regions \
+  --regionsFileName resources/GRCh38.109.gtf.gz \
+  --scoreFileName results/deeptools/brd4_*.log2.bigwig \
+  --outFileName results/deeptools/brd4.log2.mat.gz \
+  --blackListFileName resources/ENCFF356LFX_exclusion_lists.bed.gz \
+  --upstream 2000 \
+  --downstream 2000 \
+  --skipZeros \
+  --binSize 20 \
+  -p 8
+```
+
+Where: 
+
+- `--regionsFileName` is the name of the annotations we want to use to estimate the matrix of counts. 
+  Typically the GTF of gene annotations is used (but you could use a different annotation, e.g. for a small subset of genes of interest). 
+- `--scoreFileName` is the name of the files we want to calculate the binned counts on. 
+  Notice how we use the `*` wildcard to match all the BRD4. 
+- `--outFileName` is the name for the output file, which is automatically compressed using the 'gzip' algorithm (thus we save it with extension `.gz`).
+- `--blackListFileName` excludes regions falling in our exclusions list from being processed.
+- `--skipZeros` skips regions that have no counts.
+- `--upstream` and `--downstream` is the number of bp upstream and downstream of the TSS that we want to summarise counts, respectively. 
+- `--binSize` and `-p` have the same meaning as above for `bamCompare`. 
+
+This step takes quite a while to run, so we have already generated these files for you (available from `preprocessed/deeptools/`).
+
+
+## Profile heatmaps in R
+
+Generating heatmaps can also be done using the `plotHeatmap` tool from `deeptools` ([documentation](https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html)). 
+However, we will demonstrate how to do this using R, which integrates well with our previous analysis. 
+
+First, we set things up by loading our packages:
+
+```{r load_packages, cache=FALSE}
+# Packages ----
+
+# load packages
+library(rtracklayer) # for importing BED/GFF/etc.
+library(plyranges)   # for working with GenomicRanges
+library(ChIPseeker)  # to annotate peaks
+library(profileplyr) # for profile heatmaps
+library(ggplot2)
+
+# change the default ggplot theme
+theme_set(theme_classic(base_size = 14))
+```
+
+If you haven't run the previous analysis of peaks, you can also read these in from pre-processed files we provide: 
+
+```{r read_peaks, cache=FALSE}
+# read consensus GRanges
+brd4_consensus <- readRDS("preprocessed/r_objects/brd4_consensus_granges.rds")
+```
+
+The matrix of binned counts can be imported into R using the `Bioconductor/profileplyr` package. 
+
+```{r import_profile}
+# Profile heatmaps ----
+
+# import the pre-computed matrix from deeptools
+brd4_prof <- import_deepToolsMat("preprocessed/deeptools/brd4.log2.chr21.mat.gz")
+
+brd4_prof
+```
+
+The type of object returned is called a `profileplyr` object, which is a modified version of a `SummarizedExperiment` object, often used to store RNA-seq counts. 
+We won't go into the details of this object here, but you can find detailed information on the [package's vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/profileplyr/inst/doc/profileplyr.html#the-profileplyr-object). 
+
+The main things to consider for our purposes are: 
+
+- The peak intervals (ranges) over which the data are summarised is available through the `rowRanges()` slot of the object. 
+- The sample information is stored in the `sampleData()` slot of the object. 
+- We can subset the object using `[` with the syntax as: `object[ranges, bins, samples]`.
+
+Here are some illustrative examples:
+
+```{r subset_profiler}
+# ranges information
+rowRanges(brd4_prof)
+
+# sample information
+sampleData(brd4_prof)
+
+# subset the object for:
+# first 10 peaks
+# first 5 bins
+# first 3 samples
+brd4_prof[1:10, 1:5, 1:3]
+```
+
+One of the main functions provided in this package is the ability to produce profile heatmaps. 
+These heatmaps can be quite heavy to render graphically, so it's usually a good idea to subset our ranges. 
+
+In the following example, we sample a few random intervals to get an idea of occupancy for our BRD4 protein around genes:
+
+```{r enriched_heatmap}
+# sample 200 peaks randomly
+random_peaks <- sample(1:nrow(brd4_prof), 200)
+
+# Plot random peaks to give an idea of occupancy
+generateEnrichedHeatmap(brd4_prof[random_peaks, ], 
+                        include_group_annotation = FALSE)
+```
+
+We can see that BRD4 mostly occupies gene promoters. 
+This result does not come as a complete surprise, as we had already seen this in previous analysis. 
+
+For heatmaps with thousands of peaks, it's best to save them as PNG, as the plotting device on RStudio can stuggle to render them. 
+Here is an example for all Chr21 peaks we loaded in:
+
+```{r, eval=FALSE}
+# save as PNG - adjust width, height and resolution to fit your needs
+png("results/brd4_heatmap.png", width = 3000, height = 1500, res = 300)
+generateEnrichedHeatmap(brd4_prof, include_group_annotation = FALSE)
+dev.off()
+```
+
+We can subset our profile object to include only the peaks that overlap with another set of peaks of our interest. 
+For example, we could investigate if the profiles look very different for the set of genes that are differentially expressed in siBRD4 lines. 
+
+```{r profile_degs}
+# read DEGs from Nagarajan 2017
+degs <- read.csv("resources/degs_nagarajan2017.csv")
+
+# subset annotated intervals 
+brd4_consensus_degs <- brd4_consensus |> 
+  filter(geneId %in% degs$ensembl_gene_id)
+
+# subset our profile object to include only the filtered intervals
+brd4_prof_degs <- brd4_prof |> 
+  subsetByOverlaps(brd4_consensus_degs)
+  
+# visualise them
+generateEnrichedHeatmap(brd4_prof_degs, include_group_annotation = FALSE)
+```
+
+
+## Exercise: heatmap
+
+:::{.callout-exercise}
+
+Based on the code we showed above, generate a profile heatmap for the H2Bub1 ChIP.
+
+- First import the matrix of binned counts using `import_deepToolsMat()` and save it into an object called `h2bub1_prof`.
+- Then generate a heatmap using the `generateEnrichedHeatmap()` function, making sure you save it as a PNG. 
+
+Does the result match your expectation from previous analysis?
+
+```{r ex1_h2bub1_prof, echo=FALSE}
+
+# Exercise ----
+
+# Generate a profile heatmap for the H2Bub1 ChIP.
+```
+
+:::{.callout-answer collapse=true}
+
+Here is the code to import and generate a PNG file with our heatmap:
+
+```{r ex_answer_heatmap, eval=FALSE, purl=FALSE}
+# import the pre-computed matrix from deeptools
+h2bub1_prof <- import_deepToolsMat("preprocessed/deeptools/h2bub1.log2.chr21.mat.gz")
+
+# save plot as PGN
+png("results/h2bub1_heatmap.png", width = 3000, height = 1500, res = 300)
+generateEnrichedHeatmap(h2bub1_prof, include_group_annotation = FALSE)
+dev.off()
+```
+
+In order to save space, we show a random subset of 200 genes below as an example:
+
+```{r ex_answer_heatmap_part2, echo=FALSE, purl=FALSE}
+set.seed(1)
+h2bub1_prof <- import_deepToolsMat("preprocessed/deeptools/h2bub1.log2.chr21.mat.gz")
+generateEnrichedHeatmap(h2bub1_prof[sample(1:nrow(h2bub1_prof), 200), ], 
+                        include_group_annotation = FALSE)
+```
+
+The plot shows that H2Bub1 has broader peaks across whole gene bodies and promoters. 
+This fits with the the peak annotation we did earlier, which showed that most peaks occur in those regions. 
+
+:::
+:::

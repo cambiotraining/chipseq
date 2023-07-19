@@ -1,0 +1,23 @@
+# Quarto files
+/.quarto/
+_site
+
+# python notebooks
+*.ipynb
+
+# R files
+.Rhistory
+.Rapp.history
+.RData
+.RDataTmp
+.Ruserdata
+.Rproj.user/
+*_cache/
+/cache/
+*.utf8.md
+*.knit.md
+.Renviron
+
+# Jupyter cache
+.jupyter_cache
+/.luarc.json

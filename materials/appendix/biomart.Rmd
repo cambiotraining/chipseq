@@ -1,0 +1,79 @@
+---
+title: "Bioconductor Essentials: Data Mining with BioMart"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Learning Objectives
+
+
+# Datasets
+
+- could try to create a gene-to-transcript table (useful for Salmon for example)
+
+# `biomaRt` package
+
+```{r}
+library("biomaRt")
+
+# Which biomart resources are available
+listMarts(host = "https://www.ensembl.org") # vertebrates (default if we don't specify host)
+listMarts(host = "https://plants.ensembl.org")
+listMarts(host = "https://protists.ensembl.org")
+listMarts(host = "https://fungi.ensembl.org")
+listMarts(host = "https://metazoa.ensembl.org")
+
+# genes biomart for vertebrates
+gene_mart <- useEnsembl(biomart = "ENSEMBL_MART_ENSEMBL", 
+                        host = "https://www.ensembl.org")
+
+# view which datasets are available
+View(listDatasets(gene_mart))
+
+# connect to the mouse gene database
+gene_mart <- useEnsembl(biomart = "ENSEMBL_MART_ENSEMBL", 
+                        dataset = "hsapiens_gene_ensembl", 
+                        host = "https://www.ensembl.org")
+
+# check which attributes are available
+View(listAttributes(gene_mart))
+
+# query and retrieve information
+grch38_genes <- getBM(attributes = c("ensembl_gene_id", 
+                                     "ensembl_transcript_id",
+                                     "external_gene_name", 
+                                     "gene_biotype"),
+                      mart = gene_mart)
+
+head(grch38_genes)
+```
+
+Write the output:
+
+```{r}
+write.csv(grch38_genes, 
+          "resources/GRCh38_gene_names.csv",
+          row.names = FALSE)
+```
+
+```{r}
+# import list of DEGs from Nagarajan 2017
+degs <- read.csv("resources/degs_nagarajan2017.csv")
+
+# join with gene IDs just obtained
+degs <- merge(degs, grch38_genes, 
+              by.x = "name", by.y = "external_gene_name",
+              all = FALSE)
+
+degs <- subset(degs, gene_biotype == "protein_coding")
+
+write.csv(degs, 
+          "resources/degs_nagarajan2017.csv",
+          row.names = FALSE)
+```
+

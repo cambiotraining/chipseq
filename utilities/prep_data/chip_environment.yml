@@ -1,0 +1,10 @@
+name: chipseq
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - idr
+  - deeptools
+  - meme
+  - homer
+  - samtools
