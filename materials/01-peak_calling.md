@@ -244,7 +244,7 @@ Answer the following questions:
 To visually inspect your results: 
 
 - Open IGV (from the toolbar on the left)
-- Choose the "Human (GRCh39/h19)" genome on the top-right drop-down menu
+- Choose the "Human (hg38)" genome on the top-right drop-down menu
 - Go to "File" -> "Load from file..." and then navigate to `preprocessed/nf-chipseq/bwa/mergedLibrary/bigwig/*.bigWig`
 - Choose all the "bigWig" files in this folder (you can use the <kbd>Shift</kbd> key to select multiple files) and click "Open"
 - On the search bar at the top search for "ACTB" to look for enrichment in this region. 
