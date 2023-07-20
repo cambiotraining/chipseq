@@ -30,7 +30,7 @@ knitr::purl("materials/04-diffbind.Rmd",
 ::: {.callout-tip}
 #### Learning Objectives
 
-- Bulleted list of learning objectives
+- Apply the `DiffBind` package to identify differentially bound peaks between two conditions.
 :::
 
 
@@ -288,6 +288,21 @@ brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ]) |>
 brd4_diffbound <- dba.report(brd4_dba, th = 1)
 ```
 
+As we did before, we can also annotate our differentially bound peaks using `ChIPseeker`:
+
+```{r annotate_peaks, eval=FALSE, purl=FALSE}
+# import gene annotation as a transcript database
+genes <- GenomicFeatures::makeTxDbFromGFF("resources/GRCh38.109.gtf.gz")
+
+# annotate
+brd4_diffbound <- annotatePeak(brd4_diffbound, 
+                               tssRegion = c(-3e3, 3e3),
+                               TxDb = genes) |> 
+  as.GRanges()
+```
+
+
+## Exercises
 
 :::{.callout-exercise}
 
@@ -388,27 +403,8 @@ In this case there are more differentially bound peaks, and the boxplot of norma
 :::
 
 
-## Annotate peaks
-
-As we did before, we can annotate our differentially bound peaks using `ChIPseeker`:
-
-```{r annotate_peaks, eval=FALSE, purl=FALSE}
-# import gene annotation as a transcript database
-genes <- GenomicFeatures::makeTxDbFromGFF("resources/GRCh38.109.gtf.gz")
-
-# annotate
-brd4_diffbound <- annotatePeak(brd4_diffbound, 
-                               tssRegion = c(-3e3, 3e3),
-                               TxDb = genes) |> 
-  as.GRanges()
-```
-
-
-## Bonus: greylists
-
-TODO
-
 ```{r, eval=FALSE, echo=FALSE, purl=FALSE}
+# Bonus for future iterations
 # read chromosomes
 chroms <- read.table("results/chipseq/genome/GRCh38.109.fasta.sizes",
                      col.names = c("seqnames", "seqlengths"))
@@ -420,13 +416,14 @@ brd4_dba <- dba(sampleSheet = samplesheet[samplesheet$Antibody == "BRD4", ]) |>
   dba.normalize() |> 
   dba.contrast(reorderMeta = list(Treatment = "veh")) |> 
   dba.analyze(bBlacklist = FALSE, bGreylist = FALSE)
-``` 
+```
 
-
+<!-- 
 ## Summary
 
 ::: {.callout-tip}
 #### Key Points
 
 - Last section of the page is a bulleted summary of the key points
-:::
+::: 
+-->

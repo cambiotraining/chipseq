@@ -1,6 +1,6 @@
 book:
   chapters:
-    - part: "Developer Guidelines"
+    - part: "ChIP Analysis"
       chapters:
         - materials/01-peak_calling.md
         - materials/02-peak_ranges.Rmd

@@ -28,7 +28,6 @@ knitr::purl("materials//02-peak_ranges.Rmd",
 - Become familiar with `GRanges` objects and how to use them for interval-based operations.
 - Calculate and visualise peak occupancy across replicates. 
 - Annotate peaks based on known gene annotations.
-- Visualise peak profiles as a heatmap.
 
 :::
 

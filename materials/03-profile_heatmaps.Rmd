@@ -24,7 +24,8 @@ knitr::purl("materials/03-profile_heatmaps.Rmd",
 ::: {.callout-tip}
 #### Learning Objectives
 
-- Visualise peak profiles as a heatmap.
+- Generate binned count matrices for producing profile plots.
+- Visualise peak profiles as a density plots and as a heatmap.
 
 :::
 
@@ -144,10 +145,35 @@ Where:
 This step takes quite a while to run, so we have already generated these files for you (available from `preprocessed/deeptools/`).
 
 
+## Profile plots 
+
+There are two main types of profile plots that we can do: 
+
+- Density plots showing the average signal of our peaks around our regions of interest (often genes).
+- A heatmap showing the signal of individual peaks around those same regions.
+
+Once we have our binned count matrix, generating these is relatively simple using two `deeptools` commands. 
+
+For profile density plots we can use: 
+
+```bash
+plotProfile -m preprocessed/deeptools/brd4.chr21.mat.gz -out results/brd4_profile.png
+```
+
+And for heatmaps we can do: 
+
+```bash
+plotHeatmap -m preprocessed/deeptools/brd4.chr21.mat.gz -out results/brd4_heatmap.png
+```
+
+There are several other options available with both of these tools (look at their documentation: [here](https://deeptools.readthedocs.io/en/latest/content/tools/plotProfile.html) and [here](https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html)), including the ability to cluster the peaks using K-means clustering. 
+We will leave that as an optional exercise for the reader.
+
+
 ## Profile heatmaps in R
 
-Generating heatmaps can also be done using the `plotHeatmap` tool from `deeptools` ([documentation](https://deeptools.readthedocs.io/en/latest/content/tools/plotHeatmap.html)). 
-However, we will demonstrate how to do this using R, which integrates well with our previous analysis. 
+Although deeptools makes generating these plots relatively simple, we can also produce similar analysis using dedicated R/Bioconductor packages. 
+This has the advantage that it integrates well with our previous analysis in R. 
 
 First, we set things up by loading our packages:
 
