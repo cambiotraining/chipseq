@@ -14,8 +14,12 @@ cp -r utilities/prep_data/data/reads_sampled course_files/participants/data/read
 # copy all results
 cp -r utilities/prep_data/results course_files/participants/preprocessed
 
-# space-saving: remove BAM files and replace them with empty mock files
-find course_files/participants/preprocessed -type f -name "*.bam" -delete -exec touch {} \;
+# space-saving: remove BAM files and replace them with mock files
+for i in $(find course_files/participants/preprocessed -type f -name "*.bam")
+do 
+  rm $i
+  echo 'These are empty placeholder files for demonstration purposes only' > $i
+done
 
 # space-saving: remove genome directory
 rm -r course_files/participants/preprocessed/nf-chipseq/genome
