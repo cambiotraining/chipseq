@@ -59,14 +59,37 @@ The listing below shows an example of how you can give more details about yourse
 These examples include icons with links to GitHub and Orcid. 
 -->
 
-About the authors:
+About the authors (alphabetical by surname):
 
+- **Sandra Cortijo**
+  <a href="https://orcid.org/0000-0003-3291-6729" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
+  <a href="https://github.com/scortijo" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
+  _Affiliation_: Centre National de la Recherche Scientifique: Montpellier  
+  _Roles_: writing; conceptualisation; coding
+- **Sergio Martinez Cuesta**
+  <a href="https://orcid.org/0000-0001-9806-2805" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
+  <a href="https://github.com/semacu" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
+  _Affiliation_: AstraZeneca, Cambridge  
+  _Roles_: writing; conceptualisation; coding
+- **Sankari Nagarajan**
+  <a href="https://orcid.org/0000-0001-8748-6223" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
+  _Affiliation_: University of Manchester  
+  _Roles_: writing; conceptualisation
+- **Ashley Sawle**
+  <a href="https://orcid.org/0000-0002-2985-5059" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
+  <a href="https://github.com/AshKernow" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
+  _Affiliation_: Cancer Research UK, Cambridge Institute  
+  _Roles_: writing; conceptualisation; coding  
+- **Denis Seyres**
+  <a href="https://orcid.org/0000-0002-2066-6980" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
+  _Affiliation_: Universitätsspital Basel: Basel  
+  _Roles_: writing; conceptualisation; coding
 - **Hugo Tavares**
   <a href="https://orcid.org/0000-0001-9373-2726" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
   <a href="https://github.com/tavareshugo" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
   _Affiliation_: Bioinformatics Training Facility, University of Cambridge  
-  _Roles_: writing - original draft; conceptualisation; coding
-- **TODO**
+  _Roles_: writing; conceptualisation; coding
+
 
 
 ## Citation
@@ -76,22 +99,21 @@ About the authors:
 Please cite these materials if:
 
 - You adapted or used any of them in your own teaching.
-- These materials were useful for your research work. For example, you can cite us in the methods section of your paper: "We carried our analyses based on the recommendations in _TODO_.".
+- These materials were useful for your research work. For example, you can cite us in the methods section of your paper: "We carried our analyses based on the recommendations in _Cortijo S et al. (2023)_.".
 
 You can cite these materials as:
 
-> TODO
+> Cortijo S, Martinez Cuesta S, Nagarajan S, Sawle A, Seyres D, Tavares H (2023) "cambiotraining/chipseq: Analysis of ChIP-seq Data", https://cambiotraining.github.io/chipseq/
 
 Or in BibTeX format:
 
 ```
 @Misc{,
-  author = {},
-  title = {},
-  month = {},
-  year = {},
-  url = {},
-  doi = {}
+  author = {Cortijo, Sandra AND Martinez Cuesta, Sergio AND Nagarajan, Sankari AND Sawle, Ashley AND Seyres, Denis AND Tavares, Hugo},
+  title = {cambiotraining/chipseq: Analysis of ChIP-seq Data},
+  month = {July},
+  year = {2023},
+  url = {https://cambiotraining.github.io/chipseq/}
 }
 ```
 
@@ -100,4 +122,10 @@ Or in BibTeX format:
 
 <!-- if there are no acknowledgements we can delete this section -->
 
-- TODO
+There are many online resources that inspired our own materials (e.g. package vignettes) and we cite them where relevant. 
+
+We also recommend the following training materials:
+
+- [Understanding chromatin biology using high throughput sequencing](https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html) from the Harvard Chan Bioinformatics Core
+- [Introduction to ChIPseq using HPC](https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html) from the Harvard Chan Bioinformatics Core
+- [ChIP-seq analysis](https://www.bioinformatics.babraham.ac.uk/training.html#chip) from the Babraham Institute

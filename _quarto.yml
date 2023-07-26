@@ -39,9 +39,12 @@ book:
   navbar:
     pinned: true
     logo: "_extensions/cambiotraining/courseformat/img/university_crest_reversed.png"
+    left: 
+      - text: Slides
+        href: https://docs.google.com/presentation/d/1IuEuwLe7TFbn1kYQmHtsRXvFleSVq2wpaYsymMOEatA/edit?usp=sharing
     right:
       - icon: github
-        href: https://github.com/cambiotraining/
+        href: https://github.com/cambiotraining/chipseq
         aria-label: Bioinformatics Training Facility GitHub
       - icon: twitter
         href: https://twitter.com/bioinfocambs
