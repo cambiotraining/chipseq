@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Peak Calling</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../materials/02-peak_ranges.html" rel="next">
+<link href="../setup.html" rel="prev">
+<link href="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university_crest_reversed.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Analysis of ChIP-seq Data</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://docs.google.com/presentation/d/1IuEuwLe7TFbn1kYQmHtsRXvFleSVq2wpaYsymMOEatA/edit?usp=sharing">
+ <span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cambiotraining/chipseq"><i class="bi bi-github" role="img" aria-label="Bioinformatics Training Facility GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/bioinfocambs"><i class="bi bi-twitter" role="img" aria-label="Bioinformatics Training Facility Twitter">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Peak Calling</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Welcome</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ChIP Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/01-peak_calling.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Peak Calling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/02-peak_ranges.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploring peak ranges</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/03-profile_heatmaps.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Profile heatmaps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/04-diffbind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Differential binding</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#peak-calling-workflow" id="toc-peak-calling-workflow" class="nav-link active" data-scroll-target="#peak-calling-workflow"><span class="toc-section-number">3.1</span>  Peak Calling Workflow</a></li>
+  <li><a href="#running-nf-corechipseq" id="toc-running-nf-corechipseq" class="nav-link" data-scroll-target="#running-nf-corechipseq"><span class="toc-section-number">3.2</span>  Running <code>nf-core/chipseq</code></a></li>
+  <li><a href="#pipeline-outputs" id="toc-pipeline-outputs" class="nav-link" data-scroll-target="#pipeline-outputs"><span class="toc-section-number">3.3</span>  Pipeline outputs</a></li>
+  <li><a href="#quality-report" id="toc-quality-report" class="nav-link" data-scroll-target="#quality-report"><span class="toc-section-number">3.4</span>  Quality report</a>
+  <ul class="collapse">
+  <li><a href="#read-quality" id="toc-read-quality" class="nav-link" data-scroll-target="#read-quality"><span class="toc-section-number">3.4.1</span>  Read quality</a></li>
+  <li><a href="#mapping-quality" id="toc-mapping-quality" class="nav-link" data-scroll-target="#mapping-quality"><span class="toc-section-number">3.4.2</span>  Mapping quality</a></li>
+  <li><a href="#chip-enrichment" id="toc-chip-enrichment" class="nav-link" data-scroll-target="#chip-enrichment"><span class="toc-section-number">3.4.3</span>  ChIP Enrichment</a></li>
+  </ul></li>
+  <li><a href="#visualising-peaks-in-igv" id="toc-visualising-peaks-in-igv" class="nav-link" data-scroll-target="#visualising-peaks-in-igv"><span class="toc-section-number">3.5</span>  Visualising peaks in IGV</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="toc-section-number">3.6</span>  Exercises</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Peak Calling</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Apply the <code>nf-core/chipseq</code> pipeline for pre-processing, mapping, peak calling and QC of ChIP-seq data.</li>
+<li>Evaluate the quality of the ChIP from the MultiQC report.</li>
+</ul>
+</div>
+</div>
+<section id="peak-calling-workflow" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="peak-calling-workflow"><span class="header-section-number">3.1</span> Peak Calling Workflow</h2>
+<p>One of the main steps in analysing ChIP-seq data is to identify regions of the genome enriched for sequencing reads, usually referred to as <strong>peak calling</strong>. These peaks are indicative of regions of the genome where our protein of interest binds to the DNA.</p>
+<p>There are several steps involved before we do the actual peak calling, namely filtering the sequencing reads for quality and aligning them to the reference genome. Because many of these steps are relatively standard, the bioinformatic community has built pipelines that can be used to automate these data processing steps in a scalable manner.</p>
+<p>We will use the Nextflow pipeline developed by the nf-core project, which we will refer as <code>nf-core/chipseq</code>. These pipelines are <a href="https://nf-co.re/chipseq/">very well documented</a>, with many options available to customise our analysis. The main advantage of these workflows is that they chain together dozens of tools, can process an arbitrary number of samples and can be run both locally and on HPC clusters.</p>
+<p>As part of their output they also provide an interactive quality control report (HTML file), which is very useful to identify any issues with our samples early on.</p>
+</section>
+<section id="running-nf-corechipseq" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="running-nf-corechipseq"><span class="header-section-number">3.2</span> Running <code>nf-core/chipseq</code></h2>
+<p>A typical command to run this workflow is given here:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/chipseq <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> singularity <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> path/to/results <span class="dt">\</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> path/to/genome.fasta.gz <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gff</span> path/to/annotation.gff.gz <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blacklist</span> path/to/exclusion_lists.bed.gz <span class="dt">\</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--macs_gsize</span> 2700000000 <span class="dt">\</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--min_reps_consensus</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Where:</p>
+<ul>
+<li><code>-profile singularity</code> is the mode we want to use for software management. Singularity is recommended when running analysis on HPC clusters. Other alternatives include <code>conda</code> and <code>docker</code>.</li>
+<li><code>--input</code> is a CSV file containing information about our samples names and the directory paths to their respective FASTQ files. The format of this file is fully detailed in the <a href="https://nf-co.re/chipseq/2.0.0/docs/usage#samplesheet-input">documentation</a>.</li>
+<li><code>--outdir</code> is the output directory where we want our results to be saved. This directory will be created if it does not already exist.</li>
+<li><code>--fasta</code> and <code>--gff</code> are the directory paths to the reference genome and gene annotation, respectively. These can be typically be downloaded from public repositories such as ENSEMBL.</li>
+<li><code>--blacklist</code> is the directory path to a BED file containing regions of the genome to exclude from the analysis (regions identified as problematic for peak calling).</li>
+<li><code>--macs_gsize</code> is the estimated <em>mappable</em> genome size to be used as input to the MACS software. The MACS documentation recommends using 2.7e9 for the human genome and 1.87e9 for mouse.</li>
+<li><code>--min_reps_consensus</code> is the minimum number of replicates where a peak should be observed to be included in a “consensus” peak set.</li>
+</ul>
+<p>When you start running the pipeline, you will get a progress log printed on the terminal and a message will be printed when it completes.</p>
+<p>By default the pipeline runs MACS in <strong>broad peak</strong> mode. If you want to run it in <strong>narrow peak</strong> mode (e.g.&nbsp;if you’re studying transcription factors or narrow histone marks) you have to add the option <code>--narrow_peak</code> to your command.</p>
+</section>
+<section id="pipeline-outputs" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="pipeline-outputs"><span class="header-section-number">3.3</span> Pipeline outputs</h2>
+<p>The <code>nf-core/chipseq</code> workflow generates many output files, which are explained in detail in the <a href="https://nf-co.re/chipseq/2.0.0/docs/output">workflow documentation</a>. We highlight some of the more relevant files we will use throughout our analysis:</p>
+<ul>
+<li><strong>MultiQC report</strong>: this is the quality control report, which is usually the first thing to look at once we run our pipeline. This is located in <code>multiqc/&lt;PEAK TYPE&gt;/multiqc_report.html</code>.</li>
+<li><strong>Coverage tracks</strong>: these files are in “bigwig” format, a compact representation of the genome coverage of each sample and can be used in genome browsers such as IGV (more on this below). You can find these files in <code>bwa/mergedLibrary/bigwig/*.bigWig</code>, with one file per sample. The coverage values in these files are normalised to 1M mapped reads.</li>
+<li><strong>Called peaks</strong>: files containing the peak intervals identified by the MACS software. These files are in standard BED format (more details in the <a href="https://macs3-project.github.io/MACS/docs/callpeak.html">MACS documentation page</a>). These files are located in <code>bwa/mergedLibrary/macs2/&lt;PEAK_TYPE&gt;/*.broadPeak</code>.</li>
+<li><strong>Consensus peaks:</strong> these are the BED files containing the consensus peak intervals identified in a minimum number of replicates set by the pipeline option mentioned above. A consensus file is generated <em>per antibody</em> and these can also be loaded into IGV. These files are located in <code>bwa/mergedLibrary/macs2/&lt;PEAK_TYPE&gt;/consensus/&lt;ANTIBODY&gt;/*.bed</code>.</li>
+</ul>
+<p>There are many more output files, which can be useful depending on the analysis you want to do. But these are the main ones we will focus on for now.</p>
+</section>
+<section id="quality-report" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="quality-report"><span class="header-section-number">3.4</span> Quality report</h2>
+<p>The <em>MultiQC</em> report generated by <code>nf-core/chipseq</code> contains a range of visualisations and metrics that can be used to assess the quality of our samples, from the sequencing reads, to the mapping all the way down to the peak calling.</p>
+<section id="read-quality" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="read-quality"><span class="header-section-number">3.4.1</span> Read quality</h3>
+<p>The first few sections of the report show:</p>
+<ul>
+<li>The results of the FastQC software (both before and after quality filtering), reporting average read quality, adapter contamination, GC content of our reads, amongst others. See the <a href="https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/">FastQC documentation</a> for full details.</li>
+<li>A summary of the results from running the <code>cutadapt</code> software, which is used for quality-filtering of our reads and trimming adapter contaminations.</li>
+</ul>
+<p>Nowadays sequences tend to be very high quality, so it is unusual to have serious problems at this stage. However, if a very high fraction of your reads was filtered out, you should revisit what may have happened during library preparation and sequencing.</p>
+</section>
+<section id="mapping-quality" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="mapping-quality"><span class="header-section-number">3.4.2</span> Mapping quality</h3>
+<p>In terms of mapping quality, we want to look out for:</p>
+<ul>
+<li>What fraction of reads mapped to the genome?</li>
+<li>How many reads are mapped to the genome <em>after de-duplication</em>? ENCODE’s guidelines suggest having 10-20M reads for narrow peaks and 40-50M reads for broader peaks.</li>
+<li>What is the % of duplicated reads?</li>
+<li>What was our library complexity (<a href="https://www.nature.com/articles/nmeth.2375">complexity curve</a>)?</li>
+</ul>
+</section>
+<section id="chip-enrichment" class="level3" data-number="3.4.3">
+<h3 data-number="3.4.3" class="anchored" data-anchor-id="chip-enrichment"><span class="header-section-number">3.4.3</span> ChIP Enrichment</h3>
+<p>This part of the QC report is more specific for ChIP-seq analysis. There are several quality metrics that can be used to assess the quality of the ChIP enrichment:</p>
+<ul>
+<li>Strand-shift correlation and the derived metrics NSC and RSC</li>
+<li><a href="https://www.encodeproject.org/data-standards/terms/">FRiP score</a></li>
+<li><a href="https://deeptools.readthedocs.io/en/latest/content/tools/plotFingerprint.html#background">Fingerprint plot</a></li>
+<li>Correlation between replicates and PCA - in the pipeline this is done with DESeq2 (but <code>deeptools</code> can do this also)</li>
+</ul>
+<!-- https://www.encodeproject.org/data-standards/terms/#library -->
+<!--
+## Consensus Calling
+
+The way the `nf-core/chipseq` pipeline seems to do the consensus calling is the following: 
+
+- Identify peaks in at least `--min_reps_consensus` replicates per group (a group is a combination of antibody + control, I think)
+- Then take the peaks across all the replicates for that antibody and take the _union_ of peaks
+
+An alternative to do consensus calling more "manually" is to call peaks only if they are covered by at least X replicates.
+In this case, the simplest way to do it is to find peaks across all the replicates of an antibody. 
+This results in  more peaks than `nf-core/chipseq` gives, because it calls peaks if there was 1 rep in vehicle and 1 rep in e2 with a peak. 
+Whereas `nf-core/chipseq` doesn't seem to consider that one as a peak (I checked this by loading the BED consensus from the two approaches on IGV). 
+-->
+</section>
+</section>
+<section id="visualising-peaks-in-igv" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="visualising-peaks-in-igv"><span class="header-section-number">3.5</span> Visualising peaks in IGV</h2>
+<p>After thoroughly analysing our <em>MultiQC</em> report, it is also advisable to visually inspect the coverage tracks for our samples (including input controls). This can give us a good indication of whether our peaks are sharp or broad (or somewhat in-between), whether they tend to occur over gene bodies, promoters, or spread across the genome.</p>
+<p>Although we can obtain this information from our <em>MultiQC</em> report, it is still advisable to perform this visual inspection of the data. For example, you can look at genes/regions where you expect binding to occur for your protein of interest, or where you expect differences due to the treatment/conditions you used (e.g.&nbsp;from previous experiments, literature, qPCR, …).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/igv_screenshot.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">Screenshot of the IGV program, showing the coverage (normalised per 1M reads) for 3 replicate samples. In this region the peaks seem consistent across replicates, although the bottom one seems to have overal lower coverage. This is something we could investigate further.</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="exercises" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">3.6</span> Exercises</h2>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Running <code>nf-core/chipseq</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the course data, you will find a shell script named <code>scripts/01-chipseq_workflow.sh</code>. This contains some code to run the Nextflow pipeline on our samples. However, there’s a few things that need fixing first:</p>
+<ul>
+<li>Fix the <code>samplesheet.csv</code> file where the word “FIXME” appears. You can open this file in a spreadsheet program to fix the issue.</li>
+<li>Open the script <code>scripts/01-chipseq_workflow.sh</code> using a text editor (you can use <code>nano</code> from the command line, or double-click the file to open it with a graphical text editor). Fix the code where the word “FIXME” appears. Output the results to a directory called <code>results/nf-chipseq</code>.</li>
+<li>Run the script to execute the workflow. Hint: to run a shell script you use the program <code>bash name_of_script.sh</code>
+<ul>
+<li>Check that the workflow starts running successfully. You should get some progress of the different steps printed on the terminal.</li>
+<li>The workflow will take some time to run (~15 minutes). You don’t need to wait for it to finish before moving on to the next exercise.</li>
+</ul></li>
+</ul>
+<div class="callout-answer callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>To fix the samplesheet we needed to add the correct input sample name to E2-treated samples, which in this case was called “mcf7_input_e2”.</p>
+<p>The fixed code in the script is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/chipseq <span class="at">-profile</span> singularity <span class="dt">\</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--max_memory</span> 23.GB <span class="at">--max_cpus</span> 8 <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> samplesheet.csv <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> results/nf-chip <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>/resources/GRCh38.109.chr21.fasta.gz <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gtf</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>/resources/GRCh38.109.chr21.gtf.gz <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blacklist</span> <span class="va">$(</span><span class="bu">pwd</span><span class="va">)</span>/resources/ENCFF356LFX_exclusion_lists.chr21.bed.gz <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--macs_gsize</span> 40000000 <span class="dt">\</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--min_reps_consensus</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>After saving the fixed script, we ran with with:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> scripts/01-chip_workflow.sh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The script started running successfully, with the progress being printed on the screen.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout-exercise callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+MultiQC report
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the previous exercise we’ve only processed a small number of samples, with fewer reads and one chromosome, due to time constraints. However, the full data includes 14 samples:</p>
+<ul>
+<li>6 samples pulled down with BRD4 antibody: 3 control (vehicle, ‘veh’) and 3 estrogen-treated (‘e2’);</li>
+<li>6 samples pulled down with H2Bub1 antibody: 3 control (vehicle, ‘veh’) and 3 estrogen-treated (‘e2’);</li>
+<li>2 input controls for ‘veh’ and ‘e2’ conditions.</li>
+</ul>
+<p>We’ve processed the full dataset through the exact same <code>nf-core/chipseq</code> workflow and the output is in the <code>preprocessed/nf-chip</code> folder.</p>
+<p>Use the file browser to open the MultiQC report generated by the pipeline, which you can find in <code>preprocessed/nf-chipseq/multiqc/broadPeak/multiqc_report.html</code>. Answer the following questions:</p>
+<ol type="1">
+<li>Was the quality of the raw FASTQ files acceptable? Was there any evidence for Illumina adapter contamination? Was this solved after trimming? (section “LIB: FastQC (raw)”)</li>
+<li>What was the percentage of mapped reads? (section “MERGED LIB: SAMTools (unfiltered)”)</li>
+<li>Were there any samples with &gt;20% duplicate reads? (section “MERGED LIB: Picard (unfiltered)”)</li>
+<li>Looking at the fingerprint plot, what can you tell about the differences between the two antibodies? Do you expect different types of peaks? (section “MERGED LIB: deepTools”)</li>
+<li>From the read distribution profiles, do these two proteins bind to similar regions of annotated genes? (section “MERGED LIB: deepTools”)</li>
+<li>Was the peak count similar between the two antibodies? How about between replicates and treatments? (section “MERGED LIB: MACS2 peak count”)</li>
+<li>The ENCODE project uses the criteria below to evaluate if samples are good quality. Do our samples pass these thresholds? (section “MERGED LIB: MACS2 FRiP score” onwards)</li>
+</ol>
+<ul>
+<li>FRiP &gt; 1%</li>
+<li>NSC &gt; 1.05</li>
+<li>RSC &gt; 0.8</li>
+</ul>
+<div class="callout-answer callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Yes, the quality was very high, as is often the case with current Illumina chemistry.</li>
+<li>Generally the % of mapped reads was above 90%. The mapping rates seemed to be slightly lower for H2Bub1, but it doesn’t seem to be a reason for concern.</li>
+<li>No, the lowest sample had 87% unique reads (“h2bub1_veh_rep3”), suggesting no reason for concern.</li>
+<li>The fingerprint plot suggests that H2Bub1 has more consistently localised peaks compared to BRD4, as it shows “sharper” fingerprint curves.</li>
+<li>No, it seems like BRD4 binds primary upstream of the transcription start site (TSS), whereas H2Bub1 seems to occupy gene bodies (with some bias towards the 5’ of the genes).</li>
+<li>No, H2Bub1 had substantially more peaks than BRD4. This histone modification marks transcribed genes, so perhaps it is no surprise that so many peaks are found for it.<br>
+</li>
+<li>None of our samples have FRiP &gt; 1, but this is perhaps to be expected as these do not seem to occur as narrow, sharp peaks, but rather more broad. The same applies for the other criteria, as they are generally more suited to use with sharp peaks.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout-exercise callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Visualising results in IGV
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To visually inspect your results:</p>
+<ul>
+<li>Open IGV (from the toolbar on the left)</li>
+<li>Choose the “Human (hg38)” genome on the top-right drop-down menu</li>
+<li>Go to “File” -&gt; “Load from file…” and then navigate to <code>preprocessed/nf-chipseq/bwa/mergedLibrary/bigwig/*.bigWig</code></li>
+<li>Choose all the “bigWig” files in this folder (you can use the <kbd>Shift</kbd> key to select multiple files) and click “Open”</li>
+<li>On the search bar at the top search for “ACTB” to look for enrichment in this region.</li>
+</ul>
+<p>IGV is reasonably user-friendly and has many options to customise the display. By right-clicking on the track names on the left you can see many options.</p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../setup.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../materials/02-peak_ranges.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploring peak ranges</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <img src="https://creativecommons.org/images/deed/cc_icon_black_x2.png" class="img-fluid" width="25"> Bioinformatics Training Facility</div>
+  </div>
+</footer>
+
+
+
+</body></html>

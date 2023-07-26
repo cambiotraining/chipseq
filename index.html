@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Hugo Tavares">
+<meta name="dcterms.date" content="2023-07-26">
+
+<title>Analysis of ChIP-seq Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./setup.html" rel="next">
+<link href="site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university_crest_reversed.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Analysis of ChIP-seq Data</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://docs.google.com/presentation/d/1IuEuwLe7TFbn1kYQmHtsRXvFleSVq2wpaYsymMOEatA/edit?usp=sharing">
+ <span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cambiotraining/chipseq"><i class="bi bi-github" role="img" aria-label="Bioinformatics Training Facility GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/bioinfocambs"><i class="bi bi-twitter" role="img" aria-label="Bioinformatics Training Facility Twitter">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">Analysis of ChIP-seq Data</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Welcome</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ChIP Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./materials/01-peak_calling.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Peak Calling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./materials/02-peak_ranges.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploring peak ranges</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./materials/03-profile_heatmaps.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Profile heatmaps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./materials/04-diffbind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Differential binding</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
+  <li><a href="#target-audience" id="toc-target-audience" class="nav-link" data-scroll-target="#target-audience">Target Audience</a></li>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  </ul></li>
+  <li><a href="#authors" id="toc-authors" class="nav-link" data-scroll-target="#authors">Authors</a></li>
+  <li><a href="#citation" id="toc-citation" class="nav-link" data-scroll-target="#citation">Citation</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">Analysis of ChIP-seq Data</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Hugo Tavares </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">July 26, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>Chromatin immunoprecipitation followed by sequencing (ChIP-seq) is a method used to identify binding sites for transcription factors, histone modifications and other DNA-binding proteins across the genome. These materials cover the fundamentals of ChIP-seq data analysis, from raw data processing to downstream applications.<br>
+We will start with an introduction to ChIP-seq methods, including important considerations when designing your experiments. We will cover the bioinformatic steps in a standard ChIP-seq analysis workflow, covering raw data quality control, trimming/filtering, mapping, duplicate removal, post-mapping quality control, peak calling and peak annotation. We will discuss metrics used for quality assessment of the called peaks when multiple replicates are available, as well as the analysis of differential binding across sample groups. Finally, we will also cover tools and packages that can be used for visualising and exploring your results.</p>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Describe how ChIP-seq data is generated and what information it provides about the (epi)genome</li>
+<li>Recall the experimental design considerations that are needed when performing ChIP-seq experiments</li>
+<li>Understand the bioinformatic steps involved in processing ChIP-seq data</li>
+<li>Interpret and assess the quality of your data and results</li>
+<li>Perform differential binding analysis to compare different groups of samples</li>
+</ul>
+</div>
+</div>
+<section id="target-audience" class="level3">
+<h3 class="anchored" data-anchor-id="target-audience">Target Audience</h3>
+<p>This course is aimed at researchers with <strong>no prior experience in the analysis of ChIP-seq data</strong>, who would like to get started in processing their data using a standardised pipeline and perform downstream analysis and visualisation of their results.</p>
+</section>
+<section id="prerequisites" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Basic understanding of high-throughput sequencing technologies.
+<ul>
+<li>Watch <a href="https://youtu.be/mI0Fo9kaWqo">this iBiology video</a> for an excellent overview.</li>
+</ul></li>
+<li>A working knowledge of the UNIX command line (<a href="https://training.csx.cam.ac.uk/bioinformatics/course/bioinfo-unix2">course registration page</a>).
+<ul>
+<li>If you are not able to attend this prerequisite course, please work through our <a href="https://cambiotraining.github.io/unix-shell/">Unix command line materials</a> ahead of the course (up to section 7).</li>
+</ul></li>
+<li>A working knowledge of R (<a href="https://training.csx.cam.ac.uk/bioinformatics/course/bioinfo-introRbio">course registration page</a>).
+<ul>
+<li>If you are not able to attend this prerequisite course, please work through <a href="https://cambiotraining.github.io/intro-r/">our R materials</a> ahead of the course.</li>
+</ul></li>
+</ul>
+<!-- Training Developer note: comment the following section out if you did not assign levels to your exercises
+### Exercises
+
+Exercises in these materials are labelled according to their level of difficulty:
+
+| Level | Description |
+| ----: | :---------- |
+|    | Exercises in level 1 are simpler and designed to get you familiar with the concepts and syntax covered in the course. |
+|    | Exercises in level 2 combine different concepts together and apply it to a given task. |
+|    | Exercises in level 3 require going beyond the concepts and syntax introduced to solve new problems. |
+-->
+</section>
+</section>
+<section id="authors" class="level2">
+<h2 class="anchored" data-anchor-id="authors">Authors</h2>
+<!-- 
+The listing below shows an example of how you can give more details about yourself.
+These examples include icons with links to GitHub and Orcid. 
+-->
+<p>About the authors (alphabetical by surname):</p>
+<ul>
+<li><strong>Sandra Cortijo</strong> <a href="https://orcid.org/0000-0003-3291-6729" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> <a href="https://github.com/scortijo" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a><br>
+<em>Affiliation</em>: Centre National de la Recherche Scientifique: Montpellier<br>
+<em>Roles</em>: writing; conceptualisation; coding</li>
+<li><strong>Sergio Martinez Cuesta</strong> <a href="https://orcid.org/0000-0001-9806-2805" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> <a href="https://github.com/semacu" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a><br>
+<em>Affiliation</em>: AstraZeneca, Cambridge<br>
+<em>Roles</em>: writing; conceptualisation; coding</li>
+<li><strong>Sankari Nagarajan</strong> <a href="https://orcid.org/0000-0001-8748-6223" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> <em>Affiliation</em>: University of Manchester<br>
+<em>Roles</em>: writing; conceptualisation</li>
+<li><strong>Ashley Sawle</strong> <a href="https://orcid.org/0000-0002-2985-5059" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> <a href="https://github.com/AshKernow" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a><br>
+<em>Affiliation</em>: Cancer Research UK, Cambridge Institute<br>
+<em>Roles</em>: writing; conceptualisation; coding<br>
+</li>
+<li><strong>Denis Seyres</strong> <a href="https://orcid.org/0000-0002-2066-6980" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> <em>Affiliation</em>: Universitätsspital Basel: Basel<br>
+<em>Roles</em>: writing; conceptualisation; coding</li>
+<li><strong>Hugo Tavares</strong> <a href="https://orcid.org/0000-0001-9373-2726" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> <a href="https://github.com/tavareshugo" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a><br>
+<em>Affiliation</em>: Bioinformatics Training Facility, University of Cambridge<br>
+<em>Roles</em>: writing; conceptualisation; coding</li>
+</ul>
+</section>
+<section id="citation" class="level2">
+<h2 class="anchored" data-anchor-id="citation">Citation</h2>
+<!-- We can do this at the end -->
+<p>Please cite these materials if:</p>
+<ul>
+<li>You adapted or used any of them in your own teaching.</li>
+<li>These materials were useful for your research work. For example, you can cite us in the methods section of your paper: “We carried our analyses based on the recommendations in <em>Cortijo S et al.&nbsp;(2023)</em>.”.</li>
+</ul>
+<p>You can cite these materials as:</p>
+<blockquote class="blockquote">
+<p>Cortijo S, Martinez Cuesta S, Nagarajan S, Sawle A, Seyres D, Tavares H (2023) “cambiotraining/chipseq: Analysis of ChIP-seq Data”, https://cambiotraining.github.io/chipseq/</p>
+</blockquote>
+<p>Or in BibTeX format:</p>
+<pre><code>@Misc{,
+  author = {Cortijo, Sandra AND Martinez Cuesta, Sergio AND Nagarajan, Sankari AND Sawle, Ashley AND Seyres, Denis AND Tavares, Hugo},
+  title = {cambiotraining/chipseq: Analysis of ChIP-seq Data},
+  month = {July},
+  year = {2023},
+  url = {https://cambiotraining.github.io/chipseq/}
+}</code></pre>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<!-- if there are no acknowledgements we can delete this section -->
+<p>There are many online resources that inspired our own materials (e.g.&nbsp;package vignettes) and we cite them where relevant.</p>
+<p>We also recommend the following training materials:</p>
+<ul>
+<li><a href="https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html">Understanding chromatin biology using high throughput sequencing</a> from the Harvard Chan Bioinformatics Core</li>
+<li><a href="https://hbctraining.github.io/Intro-to-ChIPseq/schedule/2-day.html">Introduction to ChIPseq using HPC</a> from the Harvard Chan Bioinformatics Core</li>
+<li><a href="https://www.bioinformatics.babraham.ac.uk/training.html#chip">ChIP-seq analysis</a> from the Babraham Institute</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./setup.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+      <div class="nav-footer-center">Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <img src="https://creativecommons.org/images/deed/cc_icon_black_x2.png" class="img-fluid" width="25"> Bioinformatics Training Facility</div>
+  </div>
+</footer>
+
+
+
+</body></html>
