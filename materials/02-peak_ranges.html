@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>4&nbsp; Exploring peak ranges</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../materials/03-profile_heatmaps.html" rel="next">
+<link href="../materials/01-peak_calling.html" rel="prev">
+<link href="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+</head>
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university_crest_reversed.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Analysis of ChIP-seq Data</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+<li class="nav-item">
+    <a class="nav-link" href="https://docs.google.com/presentation/d/1IuEuwLe7TFbn1kYQmHtsRXvFleSVq2wpaYsymMOEatA/edit?usp=sharing">
+ <span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/cambiotraining/chipseq"><i class="bi bi-github" role="img" aria-label="Bioinformatics Training Facility GitHub">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/bioinfocambs"><i class="bi bi-twitter" role="img" aria-label="Bioinformatics Training Facility Twitter">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }"><div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploring peak ranges</span>
+</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Welcome</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../setup.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">ChIP Analysis</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/01-peak_calling.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Peak Calling</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/02-peak_ranges.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploring peak ranges</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/03-profile_heatmaps.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Profile heatmaps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/04-diffbind.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Differential binding</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><!-- margin-sidebar --><div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#peak-ranges" id="toc-peak-ranges" class="nav-link active" data-scroll-target="#peak-ranges"><span class="toc-section-number">4.1</span>  Peak ranges</a></li>
+  <li><a href="#import-peak-files" id="toc-import-peak-files" class="nav-link" data-scroll-target="#import-peak-files"><span class="toc-section-number">4.2</span>  Import peak files</a></li>
+  <li><a href="#peak-occupancy" id="toc-peak-occupancy" class="nav-link" data-scroll-target="#peak-occupancy"><span class="toc-section-number">4.3</span>  Peak occupancy</a></li>
+  <li><a href="#annotate-peaks" id="toc-annotate-peaks" class="nav-link" data-scroll-target="#annotate-peaks"><span class="toc-section-number">4.4</span>  Annotate peaks</a></li>
+  <li><a href="#exercise-h2bub1-peaks" id="toc-exercise-h2bub1-peaks" class="nav-link" data-scroll-target="#exercise-h2bub1-peaks"><span class="toc-section-number">4.5</span>  Exercise: H2Bub1 peaks</a></li>
+  <li><a href="#cross-reference-datasets" id="toc-cross-reference-datasets" class="nav-link" data-scroll-target="#cross-reference-datasets"><span class="toc-section-number">4.6</span>  Cross-reference datasets</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title d-none d-lg-block">
+<span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Exploring peak ranges</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><div class="cell">
+
+</div>
+<div class="cell" data-hash="../_cache/purl_081d8264658d47a90bb4079eb05b2d20">
+
+</div>
+<div class="callout-tip callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Learning Objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Import and manipulate peak ranges with dedicated R/Bioconductor packages.</li>
+<li>Become familiar with <code>GRanges</code> objects and how to use them for interval-based operations.</li>
+<li>Calculate and visualise peak occupancy across replicates.</li>
+<li>Annotate peaks based on known gene annotations.</li>
+</ul>
+</div>
+</div>
+<section id="peak-ranges" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="peak-ranges">
+<span class="header-section-number">4.1</span> Peak ranges</h2>
+<p>Although the <code>nf-core/chipseq</code> workflow generates a peak consensus BED file, it is useful to know how to read and manipulate peak files ourselves. For example, we may want to change our criteria for defining a consensus peak (e.g.&nbsp;require an overlap across more replicates), annotate our peaks, or filter them based on different criteria.</p>
+<p>In this section, we will see how we can achieve this using dedicated R/Bioconductor packages, designed to work with genomic interval data. The main object used to represent genome intervals in R is called <code>GRanges</code>, which is part of the <a href="https://bioconductor.org/packages/release/bioc/vignettes/GenomicRanges/inst/doc/GenomicRangesIntroduction.html">Bioconductor GenomicRanges package</a>.</p>
+<p>This object requires at least three pieces of information:</p>
+<ul>
+<li>chromosome names (<code>seqnames</code>);</li>
+<li>interval start and end positions (<code>ranges</code>);</li>
+<li>and strand orientation, either <code>+</code> forward or <code>-</code> reverse (<code>strand</code>).</li>
+</ul>
+<p>In addition, further columns can store additional information, such GC content in the interval, gene annotations overlapping that interval, etc. Here is an example of a simple <code>GRanges</code> object:</p>
+<div class="cell" data-hash="../_cache/granges_demo1_d8a8963f86453d504543da656c3a9a6f">
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 10 ranges and 2 metadata columns:
+    seqnames    ranges strand |     score        GC
+       &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt; | &lt;integer&gt; &lt;numeric&gt;
+  a     chr1   101-111      - |         1  1.000000
+  b     chr2   102-112      + |         2  0.888889
+  c     chr2   103-113      + |         3  0.777778
+  d     chr2   104-114      * |         4  0.666667
+  e     chr1   105-115      * |         5  0.555556
+  f     chr1   106-116      + |         6  0.444444
+  g     chr3   107-117      + |         7  0.333333
+  h     chr3   108-118      + |         8  0.222222
+  i     chr3   109-119      - |         9  0.111111
+  j     chr3   110-120      - |        10  0.000000
+  -------
+  seqinfo: 3 sequences from example genome</code></pre>
+</div>
+</div>
+<p>Here is a quick summary of functions used to access information from <code>GRanges</code> objects (the example code assumes the object is called <code>gr</code>):</p>
+<div class="cell" data-hash="../_cache/granges_demo2_e621c79ed88dd057e93ec1ac1492d5af">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># total number of intervals</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># sequence names (usually chromosomes)</span></span>
+<span><span class="co"># with number of intervals for each </span></span>
+<span><span class="fu">seqnames</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>factor-Rle of length 10 with 4 runs
+  Lengths:    1    3    2    4
+  Values : chr1 chr2 chr1 chr3
+Levels(3): chr1 chr2 chr3</code></pre>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># sequence names only</span></span>
+<span><span class="fu">seqlevels</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "chr1" "chr2" "chr3"</code></pre>
+</div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># sequence (chromosome) lengths</span></span>
+<span><span class="fu">seqlengths</span><span class="op">(</span><span class="va">gr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   chr1    chr2    chr3 
+1000000  200000   10000 </code></pre>
+</div>
+</div>
+<p>This type of object is ideal to represent ChIP peak calls, such as those identified by the MACS software. In the following sections we will show a concrete example of this in action.</p>
+</section><section id="import-peak-files" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="import-peak-files">
+<span class="header-section-number">4.2</span> Import peak files</h2>
+<p>To start our analysis, we start by loading the packages we will use:</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Packages ----</span></span>
+<span></span>
+<span><span class="co"># load packages</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rtracklayer</span><span class="op">)</span> <span class="co"># for importing BED/GFF/etc.</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">plyranges</span><span class="op">)</span>   <span class="co"># for working with GenomicRanges</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ChIPseeker</span><span class="op">)</span>  <span class="co"># to annotate peaks</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">profileplyr</span><span class="op">)</span> <span class="co"># for profile heatmaps</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># change the default ggplot theme</span></span>
+<span><span class="fu">theme_set</span><span class="op">(</span><span class="fu">theme_classic</span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">14</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The next step is to read information about our chromosome lengths, which is useful to make sure our <code>GRanges</code> object uses the correct information for our organism. We generated this information from our reference genome FASTA file and stored it as a tab-delimited file, which we read using standard R functions:</p>
+<div class="cell" data-hash="../_cache/read_chroms_2bbb3eb4cf193261ccdb407754f35fba">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Chromosome info ----</span></span>
+<span></span>
+<span><span class="co"># read chromosome sizes (for GRanges annotation)</span></span>
+<span><span class="va">chroms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"resources/GRCh38.109.chrom_sizes.tsv"</span>, </span>
+<span>                     col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"seqnames"</span>, <span class="st">"seqlengths"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># order chromosomes in a more intuititve manner</span></span>
+<span><span class="co"># and retain only autosomes (no contigs, no MT)</span></span>
+<span><span class="va">chroms</span> <span class="op">&lt;-</span> <span class="va">chroms</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">22</span>, <span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># if you had MT, you can use this code to set it as circular</span></span>
+<span><span class="va">chroms</span><span class="op">$</span><span class="va">is_circular</span> <span class="op">&lt;-</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span> <span class="op">==</span> <span class="st">"MT"</span></span>
+<span></span>
+<span><span class="co"># view table</span></span>
+<span><span class="va">chroms</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   seqnames seqlengths is_circular
+1         1  248956422       FALSE
+12        2  242193529       FALSE
+16        3  198295559       FALSE
+17        4  190214555       FALSE
+18        5  181538259       FALSE
+19        6  170805979       FALSE
+20        7  159345973       FALSE
+21        8  145138636       FALSE
+22        9  138394717       FALSE
+2        10  133797422       FALSE
+3        11  135086622       FALSE
+4        12  133275309       FALSE
+5        13  114364328       FALSE
+6        14  107043718       FALSE
+7        15  101991189       FALSE
+8        16   90338345       FALSE
+9        17   83257441       FALSE
+10       18   80373285       FALSE
+11       19   58617616       FALSE
+13       20   64444167       FALSE
+14       21   46709983       FALSE
+15       22   50818468       FALSE
+24        X  156040895       FALSE
+25        Y   57227415       FALSE</code></pre>
+</div>
+</div>
+<p>Because we have several peak files generated by MACS (one per sample and antibody), we will use some programmatic tricks to import them automatically, rather than having to repeat our code dozens of times.</p>
+<p>First, we find all the files that start with the word <code>brd4_</code>, followed by any characters (that’s what the <code>.*</code> means - it’s a <a href="http://localhost:17357/library/base/html/regex.html">regular expression</a>), followed by <code>broadPeak</code> (to match the file extension of our MACS files).</p>
+<div class="cell" data-hash="../_cache/peak_files_6a52ef08fa56c627fcb4d1388d2d6db0">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Import peaks ----</span></span>
+<span></span>
+<span><span class="co"># list peak files</span></span>
+<span><span class="va">brd4_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"preprocessed/nf-chipseq"</span>, </span>
+<span>                         pattern <span class="op">=</span> <span class="st">"brd4_.*broadPeak"</span>, </span>
+<span>                         recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                         full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">brd4_files</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"_peaks.broadPeak"</span>, <span class="st">""</span>, </span>
+<span>                          <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">brd4_files</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">brd4_files</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                             brd4_e2_rep1 
+ "preprocessed/nf-chipseq/bwa/mergedLibrary/macs2/broadPeak/brd4_e2_rep1_peaks.broadPeak" 
+                                                                             brd4_e2_rep2 
+ "preprocessed/nf-chipseq/bwa/mergedLibrary/macs2/broadPeak/brd4_e2_rep2_peaks.broadPeak" 
+                                                                             brd4_e2_rep3 
+ "preprocessed/nf-chipseq/bwa/mergedLibrary/macs2/broadPeak/brd4_e2_rep3_peaks.broadPeak" 
+                                                                            brd4_veh_rep1 
+"preprocessed/nf-chipseq/bwa/mergedLibrary/macs2/broadPeak/brd4_veh_rep1_peaks.broadPeak" 
+                                                                            brd4_veh_rep2 
+"preprocessed/nf-chipseq/bwa/mergedLibrary/macs2/broadPeak/brd4_veh_rep2_peaks.broadPeak" 
+                                                                            brd4_veh_rep3 
+"preprocessed/nf-chipseq/bwa/mergedLibrary/macs2/broadPeak/brd4_veh_rep3_peaks.broadPeak" </code></pre>
+</div>
+</div>
+<p>We then apply the function <code>import()</code> to this list of files (using <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>), which automatically generates <code>GRanges</code> objects from the BED files. We also make sure to bind them all together into a single <code>GRanges</code> object.</p>
+<div class="cell" data-hash="../_cache/peak_import_0c43d7e3f2f7c9dc82a398ad9516dd13">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># take the peak files, and then...</span></span>
+<span><span class="va">brd4_ranges</span> <span class="op">&lt;-</span> <span class="va">brd4_files</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># ... loop through and import them, and then...</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">import</span>, </span>
+<span>         format <span class="op">=</span> <span class="st">"broadPeak"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># ... bind them all together</span></span>
+<span>  <span class="fu">bind_ranges</span><span class="op">(</span>.id <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">brd4_ranges</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 76318 ranges and 6 metadata columns:
+          seqnames              ranges strand |                   name
+             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |            &lt;character&gt;
+      [1]        1       778916-779334      * |    brd4_e2_rep1_peak_1
+      [2]        1       923724-925774      * |    brd4_e2_rep1_peak_2
+      [3]        1       940347-941420      * |    brd4_e2_rep1_peak_3
+      [4]        1       958835-959478      * |    brd4_e2_rep1_peak_4
+      [5]        1       966575-967254      * |    brd4_e2_rep1_peak_5
+      ...      ...                 ...    ... .                    ...
+  [76314]        X 154019432-154019886      * | brd4_veh_rep3_peak_2..
+  [76315]        X 154397616-154398734      * | brd4_veh_rep3_peak_2..
+  [76316]        X 154411351-154412020      * | brd4_veh_rep3_peak_2..
+  [76317]        X 154428300-154428959      * | brd4_veh_rep3_peak_2..
+  [76318]        X 154478146-154478744      * | brd4_veh_rep3_peak_2..
+              score signalValue    pValue    qValue        sample
+          &lt;numeric&gt;   &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;         &lt;Rle&gt;
+      [1]        12     3.27391   3.64994   1.20458  brd4_e2_rep1
+      [2]        27     4.32637   5.48032   2.74516  brd4_e2_rep1
+      [3]        21     3.98874   4.85482   2.18338  brd4_e2_rep1
+      [4]        18     3.75835   4.45139   1.84186  brd4_e2_rep1
+      [5]        24     4.13079   5.13008   2.44575  brd4_e2_rep1
+      ...       ...         ...       ...       ...           ...
+  [76314]        17     4.20761   5.26363   1.73490 brd4_veh_rep3
+  [76315]        26     4.67337   6.33105   2.65508 brd4_veh_rep3
+  [76316]        28     4.90174   6.59650   2.85383 brd4_veh_rep3
+  [76317]        18     4.27710   5.40107   1.85129 brd4_veh_rep3
+  [76318]        16     4.13966   5.13316   1.62427 brd4_veh_rep3
+  -------
+  seqinfo: 54 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+<p>Finally, we do some tidying up, by keeping only chromosomes of interest (we get rid of contigs and the mitochondrial genome, for example) and adding genome information to our <code>GRanges</code>.</p>
+<div class="cell" data-hash="../_cache/peak_tidy_1a615d1ff49960b9567ae95600f4e238">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># subset ranges to contain only main chromosomes</span></span>
+<span><span class="va">brd4_ranges</span> <span class="op">&lt;-</span> <span class="va">brd4_ranges</span><span class="op">[</span><span class="fu">seqnames</span><span class="op">(</span><span class="va">brd4_ranges</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span>, <span class="op">]</span></span>
+<span><span class="fu">seqlevels</span><span class="op">(</span><span class="va">brd4_ranges</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span></span>
+<span><span class="va">brd4_ranges</span> <span class="op">&lt;-</span> <span class="fu">set_genome_info</span><span class="op">(</span><span class="va">brd4_ranges</span>, </span>
+<span>                               genome <span class="op">=</span> <span class="st">"GRCh38"</span>,</span>
+<span>                               seqnames <span class="op">=</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span>,</span>
+<span>                               seqlengths <span class="op">=</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqlengths</span>,</span>
+<span>                               is_circular <span class="op">=</span> <span class="va">chroms</span><span class="op">$</span><span class="va">is_circular</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You may have noticed earlier, when we loaded our packages, that we’re using a package called <code>plyranges</code>. This package implements some functions from the popular data manipulation package <code>dplyr</code>, but for <code>GRanges</code> (<a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/plyranges/inst/doc/an-introduction.html">docs</a>). For example, here we use the function <code>mutate()</code> to add a new column, indicating which treatment our samples belong to:</p>
+<div class="cell" data-hash="../_cache/range_mutate_9b14dd73c2b5c606bd3018d60f4b8d8c">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># add treatment variable</span></span>
+<span><span class="va">brd4_ranges</span> <span class="op">&lt;-</span> <span class="va">brd4_ranges</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>treatment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"_e2_"</span>, <span class="va">sample</span><span class="op">)</span>, <span class="st">"e2"</span>, <span class="st">"veh"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="peak-occupancy" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="peak-occupancy">
+<span class="header-section-number">4.3</span> Peak occupancy</h2>
+<p>Now that we have our <code>GRanges</code> object, we can calculate the coverage across intervals of our genome, i.e.&nbsp;how many intervals in our genome are covered 1, 2, 3, 4, etc. times. In our case, this is equivalent to asking how many samples have overlapping peaks in a given interval.</p>
+<p>We do this using the <code>compute_coverage()</code> function (notice how we also use the <code><a href="https://rdrr.io/r/stats/filter.html">filter()</a></code> function, analogous to the <code>dplyr::filter()</code> function to subset rows of our <code>GRanges</code> based on a condition):</p>
+<div class="cell" data-hash="../_cache/peak_coverage_b240e59574408af2cc8d286f53da3ea6">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Coverage ranges ----</span></span>
+<span></span>
+<span><span class="co"># calculate coverage across genome</span></span>
+<span><span class="va">brd4_coverage</span> <span class="op">&lt;-</span> <span class="va">brd4_ranges</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">compute_coverage</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># visualise occupancy rates</span></span>
+<span><span class="va">brd4_coverage</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># remove intervals with no coverage at all</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># convert to data.frame</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># barplot of counts for each coverage score</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">score</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"# overlaps"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-peak_ranges_files/figure-html/peak_coverage-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see from our barplot that the frequency drops substantially from 1 to 2 overlaps, by more than half. This may indicate some quality issues with our samples, for example due to unequal FRiP scores (fraction of reads mapped to called peaks), which we’ve seen was an issue from our <code>nf-core/chipseq</code> MultiQC report.</p>
+<p>We can now generate a set of consensus peaks by doing the following:</p>
+<ul>
+<li>identify intervals that have a coverage of at least 2;</li>
+<li>filter our original intervals based on the coverage &gt; 2 intervals;</li>
+<li>optionally, we also merge intervals within 1kb of each other (you can adjust this, based on your knowledge of the biology).</li>
+</ul>
+<div class="cell" data-hash="../_cache/peak_consensus_24ba1dbab7f94095cc6a272c3a2d66c0">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get intervals with coverage &gt;= 2</span></span>
+<span><span class="va">brd4_coverage2</span> <span class="op">&lt;-</span> <span class="va">brd4_coverage</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create consensus peak intervals</span></span>
+<span><span class="va">brd4_consensus</span> <span class="op">&lt;-</span> <span class="va">brd4_ranges</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># filter to retain ranges with enough coverage</span></span>
+<span>  <span class="fu">filter_by_overlaps</span><span class="op">(</span><span class="va">brd4_coverage2</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># merge ranges within 1kb of each other</span></span>
+<span>  <span class="fu">reduce</span><span class="op">(</span>min.gapwidth <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using this method, we have 11481 intervals.</p>
+<p>At this stage, we could export these intervals as a BED file, to use in other downstream analysis, or to load into IGV:</p>
+<div class="cell" data-hash="../_cache/write_bed_e0f534a8c2c5604abbf6642a4af8fd13">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">write_bed</span><span class="op">(</span><span class="va">brd4_consensus</span>, <span class="st">"results/brd4_consensus_overlap2.bed"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="annotate-peaks" class="level2" data-number="4.4"><h2 data-number="4.4" class="anchored" data-anchor-id="annotate-peaks">
+<span class="header-section-number">4.4</span> Annotate peaks</h2>
+<p>Another useful task we can do is to annotate our peaks based on known gene annotations. We’ve already seen how this is done by the <code>nf-core/chipseq</code> workflow (which uses the <a href="http://homer.ucsd.edu/homer/">HOMER software</a> behind the scenes), but we’ll demonstrate how you can also annotate <code>GRanges</code> objects from within R.</p>
+<p>The first thing we do is import the GTF file as a <code>TxDb</code> object (this is another standard Bioconductor object used to store gene annotations in a database-like object). We then use the <code>annotatePeak()</code> function (part of the <code>ChIPseeker</code> package), which adds columns to our <code>GRanges</code> object with the annotation outcome.</p>
+<div class="cell" data-hash="../_cache/peak_annotate_74a535366573e944b46d35e16c8dd3fe">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Annotate peaks ----</span></span>
+<span></span>
+<span><span class="co"># import GTF as a TxDb object</span></span>
+<span><span class="va">genes</span> <span class="op">&lt;-</span> <span class="fu">GenomicFeatures</span><span class="fu">::</span><span class="fu">makeTxDbFromGFF</span><span class="op">(</span><span class="st">"resources/GRCh38.109.gtf.gz"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># we use ChIPseeker to annotate the peaks</span></span>
+<span><span class="va">brd4_consensus</span> <span class="op">&lt;-</span> <span class="va">brd4_consensus</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">annotatePeak</span><span class="op">(</span>tssRegion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3e3</span>, <span class="fl">3e3</span><span class="op">)</span>,</span>
+<span>               TxDb <span class="op">=</span> <span class="va">genes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># convert back to GRanges</span></span>
+<span>  <span class="fu">as.GRanges</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&gt;&gt; preparing features information...         2023-07-19 09:15:40 
+&gt;&gt; identifying nearest features...       2023-07-19 09:15:41 
+&gt;&gt; calculating distance from peak to TSS...  2023-07-19 09:15:41 
+&gt;&gt; assigning genomic annotation...       2023-07-19 09:15:41 
+&gt;&gt; assigning chromosome lengths          2023-07-19 09:15:59 
+&gt;&gt; done...                   2023-07-19 09:15:59 </code></pre>
+</div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">brd4_consensus</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GRanges object with 11481 ranges and 9 metadata columns:
+          seqnames              ranges strand |       annotation   geneChr
+             &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |      &lt;character&gt; &lt;integer&gt;
+      [1]        1       778688-779334      * | Promoter (&lt;=1kb)         1
+      [2]        1       923557-926380      * | Promoter (&lt;=1kb)         1
+      [3]        1       939974-943307      * | Promoter (&lt;=1kb)         1
+      [4]        1       958835-959478      * | Promoter (&lt;=1kb)         1
+      [5]        1       966550-967254      * | Promoter (&lt;=1kb)         1
+      ...      ...                 ...    ... .              ...       ...
+  [11477]        X 154762455-154764031      * | Promoter (&lt;=1kb)        23
+  [11478]        X 155026794-155027456      * | Promoter (&lt;=1kb)        23
+  [11479]        X 155070742-155071909      * | Promoter (&lt;=1kb)        23
+  [11480]        X 155216022-155216875      * | Promoter (&lt;=1kb)        23
+  [11481]        X 155612452-155613133      * | Promoter (&lt;=1kb)        23
+          geneStart   geneEnd geneLength geneStrand          geneId
+          &lt;integer&gt; &lt;integer&gt;  &lt;integer&gt;  &lt;integer&gt;     &lt;character&gt;
+      [1]    778747    805994      27248          1 ENSG00000237491
+      [2]    923923    944574      20652          1 ENSG00000187634
+      [3]    940346    942173       1828          1 ENSG00000187634
+      [4]    944203    959256      15054          2 ENSG00000188976
+      [5]    966502    975008       8507          1 ENSG00000187583
+      ...       ...       ...        ...        ...             ...
+  [11477] 154762742 154777688      14947          1 ENSG00000130826
+  [11478] 155026844 155060304      33461          1 ENSG00000165775
+  [11479] 155061622 155071136       9515          2 ENSG00000182712
+  [11480] 155216460 155239841      23382          1 ENSG00000155959
+  [11481] 155612572 155738214     125643          1 ENSG00000168939
+             transcriptId distanceToTSS
+              &lt;character&gt;     &lt;numeric&gt;
+      [1] ENST00000655765             0
+      [2] ENST00000616016             0
+      [3] ENST00000478729             0
+      [4] ENST00000327044             0
+      [5] ENST00000379409            48
+      ...             ...           ...
+  [11477] ENST00000620277             0
+  [11478] ENST00000369498             0
+  [11479] ENST00000369484             0
+  [11480] ENST00000286428             0
+  [11481] ENST00000676089             0
+  -------
+  seqinfo: 24 sequences from an unspecified genome; no seqlengths</code></pre>
+</div>
+</div>
+<p>This new annotate object can be used, for example, to visualise how many peaks have each annotation:</p>
+<div class="cell" data-hash="../_cache/annotation_barplot_caaaae1c9f34ce525de9ac57d502d58a">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># barplot of annotations</span></span>
+<span><span class="va">brd4_consensus</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># remove gene IDs from exon/intro annotations for cleaner plot</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>annotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"Exon .*"</span>, <span class="st">"Exon"</span>, <span class="va">annotation</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>annotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"Intron .*"</span>, <span class="st">"Intron"</span>, <span class="va">annotation</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># make plot</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">annotation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-peak_ranges_files/figure-html/annotation_barplot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can see that most peaks are within 1kb of the promoter region of the annotated transcripts. We might expect this to be the case, as we’d seen earlier from the read distribution profiles (on the MultiQC report from <code>nf-core/chipseq</code>) that BRD4 seems to occur upstream of the TSS.</p>
+</section><section id="exercise-h2bub1-peaks" class="level2" data-number="4.5"><h2 data-number="4.5" class="anchored" data-anchor-id="exercise-h2bub1-peaks">
+<span class="header-section-number">4.5</span> Exercise: H2Bub1 peaks</h2>
+<div class="callout-exercise callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Exercise
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="../_cache/ex_header_a0af176e861c5684d73fc913780647f2">
+
+</div>
+<p>We now want to do a similar analysis for the H2Bub1 histone ChIP. In summary, we want to:</p>
+<ul>
+<li>Import all the H2Bub1 broadPeak files generated by MACS into a <code>GRanges</code> object.</li>
+<li>Calculate interval coverage and visualise it as a barplot.</li>
+<li>Create a <code>GRanges</code> object of consensus peaks called in at least 2 samples.</li>
+<li>Make a barplot of annotations.</li>
+</ul>
+<p>While you do this analysis, what can you conclude about the differences between H2Bub1 and BRD4 in terms of their ChIP profiles?</p>
+<p>We already provide a code skeleton for you to do this, with some “FIXME” for you to correct.</p>
+<details><summary>
+Code skeleton
+</summary><p>Note, this code is provided in the accompanying course materials script. It’s only shown here for reference.</p>
+<div class="cell" data-hash="../_cache/ex_h2bub_5d2ba32d9de52ce37fa0e77b55ce3353">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!FIX!!! list peak files </span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>h2bub1_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"preprocessed/nf-chipseq"</span>,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">pattern =</span> <span class="st">"FIXME"</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">recursive =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(h2bub1_files) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"_peaks.broadPeak"</span>, <span class="st">""</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">basename</span>(h2bub1_files))</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># take the peak files, and then...</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>h2bub1_ranges <span class="ot">&lt;-</span> h2bub1_files <span class="sc">|&gt;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... loop through and import them, and then...</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(import,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">format =</span> <span class="st">"broadPeak"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ... bind them all together</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_ranges</span>(<span class="at">.id =</span> <span class="st">"sample"</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># subset ranges to contain only main chromosomes</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>h2bub1_ranges <span class="ot">&lt;-</span> h2bub1_ranges[<span class="fu">seqnames</span>(h2bub1_ranges) <span class="sc">%in%</span> chroms<span class="sc">$</span>seqnames, ]</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">seqlevels</span>(h2bub1_ranges) <span class="ot">&lt;-</span> chroms<span class="sc">$</span>seqnames</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>h2bub1_ranges <span class="ot">&lt;-</span> <span class="fu">set_genome_info</span>(h2bub1_ranges,</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">genome =</span> <span class="st">"GRCh38"</span>,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">seqnames =</span> chroms<span class="sc">$</span>seqnames,</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">seqlengths =</span> chroms<span class="sc">$</span>seqlengths,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">is_circular =</span> chroms<span class="sc">$</span>is_circular)</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="co"># add treatment variable</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>h2bub1_ranges <span class="ot">&lt;-</span> h2bub1_ranges <span class="sc">|&gt;</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">treatment =</span> <span class="fu">ifelse</span>(<span class="fu">grepl</span>(<span class="st">"_e2_"</span>, sample), <span class="st">"e2"</span>, <span class="st">"veh"</span>))</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!FIX!!! calculate coverage across genome</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>h2bub1_coverage <span class="ot">&lt;-</span> FIXME</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co"># occupancy rates</span></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>h2bub1_coverage <span class="sc">|&gt;</span></span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove intervals with no coverage at all</span></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(score <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># convert to data.frame</span></span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># barplot of counts for each coverage score</span></span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> score)) <span class="sc">+</span></span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"# overlaps"</span>)</span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!FIX!!! get intervals with coverage &gt;= 2</span></span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>h2bub1_coverage2 <span class="ot">&lt;-</span> FIXME</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!FIX!!! create consensus peak intervals</span></span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>h2bub1_consensus <span class="ot">&lt;-</span> h2bub1_ranges <span class="sc">|&gt;</span></span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filter to retain ranges with enough coverage</span></span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>  FIXME <span class="sc">|&gt;</span></span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># merge ranges within 1kb of each other</span></span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">reduce</span>(<span class="at">min.gapwidth =</span> <span class="fl">1e3</span>)</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a><span class="co"># !!!FIX!!! use ChIPseeker to annotate the peaks</span></span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a>h2bub1_consensus <span class="ot">&lt;-</span> FIXME</span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a><span class="co"># barplot of annotations</span></span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a>h2bub1_consensus <span class="sc">|&gt;</span></span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove gene IDs from exon/intro annotations for cleaner plot</span></span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annotation =</span> <span class="fu">gsub</span>(<span class="st">"Exon .*"</span>, <span class="st">"Exon"</span>, annotation)) <span class="sc">|&gt;</span></span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">annotation =</span> <span class="fu">gsub</span>(<span class="st">"Intron .*"</span>, <span class="st">"Intron"</span>, annotation)) <span class="sc">|&gt;</span></span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># make plot</span></span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(annotation)) <span class="sc">+</span></span>
+<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details><div class="callout-answer callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The complete analysis code is shown here:</p>
+<div class="cell" data-hash="../_cache/ex_answer_h2bub1_cf04f6802a9a93f0ca6ee5f7b42e1f73">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># list peak files</span></span>
+<span><span class="va">h2bub1_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span>path <span class="op">=</span> <span class="st">"preprocessed/nf-chipseq"</span>, </span>
+<span>                           pattern <span class="op">=</span> <span class="st">"h2bub1_.*.broadPeak"</span>, </span>
+<span>                           recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                           full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">h2bub1_files</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"_peaks.broadPeak"</span>, <span class="st">""</span>, </span>
+<span>                            <span class="fu"><a href="https://rdrr.io/r/base/basename.html">basename</a></span><span class="op">(</span><span class="va">h2bub1_files</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># take the peak files, and then...</span></span>
+<span><span class="va">h2bub1_ranges</span> <span class="op">&lt;-</span> <span class="va">h2bub1_files</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># ... loop through and import them, and then...</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">import</span>, </span>
+<span>         format <span class="op">=</span> <span class="st">"broadPeak"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># ... bind them all together</span></span>
+<span>  <span class="fu">bind_ranges</span><span class="op">(</span>.id <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="co"># subset ranges to contain only main chromosomes</span></span>
+<span><span class="va">h2bub1_ranges</span> <span class="op">&lt;-</span> <span class="va">h2bub1_ranges</span><span class="op">[</span><span class="fu">seqnames</span><span class="op">(</span><span class="va">h2bub1_ranges</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span>, <span class="op">]</span></span>
+<span><span class="fu">seqlevels</span><span class="op">(</span><span class="va">h2bub1_ranges</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span></span>
+<span><span class="va">h2bub1_ranges</span> <span class="op">&lt;-</span> <span class="fu">set_genome_info</span><span class="op">(</span><span class="va">h2bub1_ranges</span>, </span>
+<span>                                 genome <span class="op">=</span> <span class="st">"GRCh38"</span>,</span>
+<span>                                 seqnames <span class="op">=</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqnames</span>,</span>
+<span>                                 seqlengths <span class="op">=</span> <span class="va">chroms</span><span class="op">$</span><span class="va">seqlengths</span>,</span>
+<span>                                 is_circular <span class="op">=</span> <span class="va">chroms</span><span class="op">$</span><span class="va">is_circular</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># add treatment variable</span></span>
+<span><span class="va">h2bub1_ranges</span> <span class="op">&lt;-</span> <span class="va">h2bub1_ranges</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>treatment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span><span class="op">(</span><span class="st">"_e2_"</span>, <span class="va">sample</span><span class="op">)</span>, <span class="st">"e2"</span>, <span class="st">"veh"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="co"># calculate coverage across genome</span></span>
+<span><span class="va">h2bub1_coverage</span> <span class="op">&lt;-</span> <span class="va">h2bub1_ranges</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">compute_coverage</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># occupancy rates</span></span>
+<span><span class="va">h2bub1_coverage</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># remove intervals with no coverage at all</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># convert to data.frame</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># barplot of counts for each coverage score</span></span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">score</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"# overlaps"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-peak_ranges_files/figure-html/ex_answer_h2bub1-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># get intervals with coverage &gt;= 2</span></span>
+<span><span class="va">h2bub1_coverage2</span> <span class="op">&lt;-</span> <span class="va">h2bub1_coverage</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create consensus peak intervals</span></span>
+<span><span class="va">h2bub1_consensus</span> <span class="op">&lt;-</span> <span class="va">h2bub1_ranges</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># filter to retain ranges with enough coverage</span></span>
+<span>  <span class="fu">filter_by_overlaps</span><span class="op">(</span><span class="va">h2bub1_coverage2</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># merge ranges within 1kb of each other</span></span>
+<span>  <span class="fu">reduce</span><span class="op">(</span>min.gapwidth <span class="op">=</span> <span class="fl">1e3</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="co"># use ChIPseeker to annotate the peaks</span></span>
+<span><span class="va">h2bub1_consensus</span> <span class="op">&lt;-</span> <span class="va">h2bub1_consensus</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">annotatePeak</span><span class="op">(</span>tssRegion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3e3</span>, <span class="fl">3e3</span><span class="op">)</span>,</span>
+<span>               TxDb <span class="op">=</span> <span class="va">genes</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">as.GRanges</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&gt;&gt; preparing features information...         2023-07-19 09:16:28 
+&gt;&gt; identifying nearest features...       2023-07-19 09:16:28 
+&gt;&gt; calculating distance from peak to TSS...  2023-07-19 09:16:29 
+&gt;&gt; assigning genomic annotation...       2023-07-19 09:16:29 
+&gt;&gt; assigning chromosome lengths          2023-07-19 09:16:31 
+&gt;&gt; done...                   2023-07-19 09:16:31 </code></pre>
+</div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># barplot of annotations</span></span>
+<span><span class="va">h2bub1_consensus</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># remove gene IDs from exon/intro annotations for cleaner plot</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>annotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"Exon .*"</span>, <span class="st">"Exon"</span>, <span class="va">annotation</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>annotation <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">"Intron .*"</span>, <span class="st">"Intron"</span>, <span class="va">annotation</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co"># make plot</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">annotation</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">geom_bar</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="02-peak_ranges_files/figure-html/ex_answer_h2bub1-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Looking at these results we can conclude that:</p>
+<ul>
+<li>H2Bub1 signals are much more consistent across replicates, with hardly a drop in the frequency of intervals with overlap 2 or even 3.</li>
+<li>A much higher fraction of peaks fall in introns, promoters and exons, which makes sense because we had previously seen that H2Bub1 seems to occupy gene bodies.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section><section id="cross-reference-datasets" class="level2" data-number="4.6"><h2 data-number="4.6" class="anchored" data-anchor-id="cross-reference-datasets">
+<span class="header-section-number">4.6</span> Cross-reference datasets</h2>
+<p>Often ChIP-seq experiments might be complemented with RNA-seq experiments, to assess changes in gene expression in comparable conditions to those where the ChIP experiment was performed. If that is the case, we may want to cross-reference our annotated peaks with the results from the RNA-seq analysis.</p>
+<p>We have obtained a list of differentially expressed genes between control and siBRD4 MCF7 cells from the supplementary data in <a href="https://doi.org/10.1093/nar/gkw1276">Nagarajan et al.&nbsp;2017</a>. This should give an indication of which genes change their expression in a BRD4-dependent manner, which may be relevant for us to further filter and/or interpret our peaks.</p>
+<p>In the code below we start by reading the CSV file with differentially expressed gene IDs, which we then use to filter our annotated consensus peak list.</p>
+<div class="cell" data-hash="../_cache/peak_subset_4e6ae7e5b411d909842483f1bdf63174">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Subset peaks ----</span></span>
+<span></span>
+<span><span class="co"># read DEGs from Nagarajan 2017</span></span>
+<span><span class="va">degs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"resources/degs_nagarajan2017.csv"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># subset annotated intervals</span></span>
+<span><span class="va">brd4_consensus_degs</span> <span class="op">&lt;-</span> <span class="va">brd4_consensus</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">geneId</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">degs</span><span class="op">$</span><span class="va">ensembl_gene_id</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We are left with 397 intervals.</p>
+<p>We will continue working with this subset of peaks in the next section, to compare the ChIP profiles between differentially expressed genes and other genes.</p>
+
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../materials/01-peak_calling.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Peak Calling</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../materials/03-profile_heatmaps.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Profile heatmaps</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+      <div class="nav-footer-center">Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <img src="https://creativecommons.org/images/deed/cc_icon_black_x2.png" class="img-fluid" width="25"> Bioinformatics Training Facility</div>
+  </div>
+</footer>
+
+
+</body></html>
